@@ -16,19 +16,25 @@ class BasicsTestCase(unittest.TestCase):
         db.drop_all()
         db.create_all()
         load_data.load(db)
+        self.app.logger.info("\n\n")
 
     def tearDown(self):
         db.session.remove()
         # db.drop_all()
         self.app_context.pop()
 
-    def test_app_exists(self):
-        self.assertFalse(current_app is None)
+    # def test_app_exists(self):
+    #     self.assertFalse(current_app is None)
 
-    def test_app_is_testing(self):
-        self.assertTrue(current_app.config["TESTING"])
+    # def test_app_is_testing(self):
+    #     self.assertTrue(current_app.config["TESTING"])
 
     def test_order(self):
+
+        self.assertTrue(current_app.config["TESTING"])
+
+        self.assertFalse(current_app is None)
+
         orders = Order.query.filter_by(customer_id="87").all()
         self.assertTrue(len(orders) == 5)
 
@@ -36,22 +42,23 @@ class BasicsTestCase(unittest.TestCase):
         results = db.session.execute(query).all()
 
         for order, product in results:
-            print(f"---==> {order.id} {product.id}")
+            self.app.logger.info(f"Result of query: {order.id} {product.id}")
 
-        print()
+        self.app.logger.info("\n")
         query = (
             select(order_details, Product.product_name)
             .join(Product)
             .where(order_details.c.order_id == 10248)
         )
-        print(query)
-        print()
+        self.app.logger.info(f"Query: {query}")
+        self.app.logger.info("\n")
         values = db.session.execute(query)
 
         count = 0
         for value in values:
-            print(value)
+            self.app.logger.info(value)
             count = count + 1
-        # print(db.session.query(order_details).join(Order).join(Product).filter(order_details.c.order_id == 10248))
-        # print(values)
+        # self.app.logger.info(db.session.query(order_details)
+        # .join(Order).join(Product).filter(order_details.c.order_id == 10248))
+        # self.app.logger.info(values)
         self.assertTrue(count == 3)

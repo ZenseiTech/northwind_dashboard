@@ -162,7 +162,7 @@ selenium_drivers/*
 
 app/samples/**
 
-logs
+logs/**
 
 *.svg
 *.pdf

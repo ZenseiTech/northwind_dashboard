@@ -1,5 +1,12 @@
 """Load data from sql files."""
+import logging as logger
+
 from sqlalchemy import text
+
+logger.basicConfig(
+    format="%(levelname)s : Date-Time : %(asctime)s : Line No. : %(lineno)d - %(message)s",
+    level=logger.DEBUG,
+)
 
 
 def __load_data__(db, filename):
@@ -8,16 +15,14 @@ def __load_data__(db, filename):
 
     if "categories" in insert_data_sql:
         # this is necessary to propery set image data ...
-        print()
-        print("===========> Adding categories images ...")
+        logger.debug("===========> Adding categories images ...")
         insert_data_sql = (
             insert_data_sql.replace("0x", "x'")
             .replace("),", "'),")
             .replace(");", "');")
         )
     elif "employees" in insert_data_sql:
-        print()
-        print("===========> Adding employees images ...")
+        logger.debug("===========> Adding employees images ...")
 
         insert_data_sql = insert_data_sql.replace("0x", "x'").replace("D900,", "D900',")
 
@@ -39,7 +44,7 @@ def __load_data__(db, filename):
                 )
                 conn.execute(text("ALTER TABLE orders drop cust_id"))
         except Exception as e:
-            print(e)
+            logger.error(e)
 
 
 def load(db, dropall=False):

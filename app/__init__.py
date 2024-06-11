@@ -1,4 +1,6 @@
 """Constructor of the main app."""
+import logging
+
 from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
@@ -18,10 +20,14 @@ pagedown = PageDown()
 login_manager = LoginManager()
 login_manager.login_view = "auth.login"
 
+# logging.basicConfig(format='Date-Time : %(asctime)s : Line No. : %(lineno)d - %(message)s', \
+#                     level = logging.DEBUG)
+
 
 def create_app(config_name):
     """Start Flask application."""
     app = Flask(__name__)
+
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
 
@@ -31,6 +37,11 @@ def create_app(config_name):
     db.init_app(app)
     login_manager.init_app(app)
     pagedown.init_app(app)
+
+    # setting logging ...
+    app.logger.setLevel(app.config["LOGGER_LEVEL"])
+    handler = logging.FileHandler("logs/northwind.log")
+    app.logger.addHandler(handler)
 
     # if app.config["SSL_REDIRECT"]:
     #     from flask_sslify import SSLify
