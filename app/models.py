@@ -122,11 +122,11 @@ class User(UserMixin, db.Model):
         """Verify the pass password."""
         return check_password_hash(self.password_hash, password)
 
-    def generate_token(self, expiration):
+    def generate_token(self, expiration, type="confirm"):
         """Generate a token, with the pass expiration."""
         reset_token = jwt.encode(
             {
-                "confirm": self.id,
+                type: self.id,
                 "exp": datetime.utcnow() + timedelta(seconds=expiration),
             },
             current_app.config["SECRET_KEY"],
@@ -140,14 +140,7 @@ class User(UserMixin, db.Model):
 
     def generate_reset_token(self, expiration=3600):
         """Generate a reset token with the pass expiration."""
-        return jwt.encode(
-            {
-                "reset": self.id,
-                "exp": datetime.utcnow() + timedelta(seconds=expiration),
-            },
-            current_app.config["SECRET_KEY"],
-            algorithm="HS256",
-        )
+        return self.generate_token(expiration, type="reset")
 
     def confirm(self, token):
         """Confirm the pass token."""
