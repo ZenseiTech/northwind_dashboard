@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from flask_migrate import Migrate, upgrade
 
 from app import create_app, db
-from app.models import Category
+from app.models import Category, Permission, Role, User
 
 dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
 if os.path.exists(dotenv_path):
@@ -30,6 +30,9 @@ def make_shell_context():
     """Allow for access in flask shell the objects."""
     return dict(
         db=db,
+        User=User,
+        Role=Role,
+        Permission=Permission,
         Category=Category,
     )
 
@@ -99,12 +102,8 @@ def deploy():
     # migrate database to latest revision
     upgrade()
 
-
-#     # create or update user roles
-#     Role.insert_roles()
-
-#     # ensure all users are following themselves
-#     User.add_self_follows()
+    # create or update user roles
+    Role.insert_roles()
 
 
 def create_secret_token():
