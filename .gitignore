@@ -164,6 +164,9 @@ app/samples/**
 
 logs/**
 
+# just keep the logs folder
+!logs/.gitkeep
+
 *.svg
 *.pdf
 *.sqlite
