@@ -54,3 +54,6 @@ To test:
 To clean pip
 
 pip freeze | xargs pip uninstall -y
+
+
+http://localhost:5000/api/v1/categories
