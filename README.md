@@ -53,7 +53,11 @@ To test:
 
 To clean pip
 
-pip freeze | xargs pip uninstall -y
+    pip freeze | xargs pip uninstall -y
 
 
 http://localhost:5000/api/v1/categories
+
+If you don't want to run a hook at runtime in pre-commit
+
+    SKIP=unittests pre-commit run --all-files
