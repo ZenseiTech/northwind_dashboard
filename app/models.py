@@ -1,4 +1,5 @@
 """Contains the model to the database."""
+
 import hashlib
 import traceback
 from datetime import datetime, timedelta

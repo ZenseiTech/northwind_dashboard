@@ -30,6 +30,15 @@ Read: https://pypi.org/project/pip-tools/
 
         pre-commit run --all-files
 
+
+    pre-commit gc: clears unused things
+    pre-commit clean: nukes the whole thing
+
+
+Set PYTHONPATH to see your modules
+
+    export PYTHONPATH="/media/zensei/My Passport/Zensei/Projects/Python/northwind-dashboard/app:$PYTHONPATH"
+
 Make sure that:
 
     export FLASK_APP=northwind.py
@@ -39,3 +48,9 @@ To test:
     flask test
 
     flask test --coverage
+
+
+
+To clean pip
+
+pip freeze | xargs pip uninstall -y

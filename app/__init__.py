@@ -1,4 +1,5 @@
 """Constructor of the main app."""
+
 import logging
 
 from flask import Flask

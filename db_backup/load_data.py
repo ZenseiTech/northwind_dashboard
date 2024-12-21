@@ -1,4 +1,5 @@
 """Load data from sql files."""
+
 import logging as logger
 
 from sqlalchemy import text

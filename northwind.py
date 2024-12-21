@@ -1,4 +1,5 @@
 """Northwind application setup."""
+
 import os
 import sys
 
