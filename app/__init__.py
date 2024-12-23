@@ -27,9 +27,11 @@ login_manager.login_view = "auth.login"
 
 def create_app(config_name):
     """Start Flask application."""
+    print(f"===> Config name: {config_name}")
     app = Flask(__name__)
 
     app.config.from_object(config[config_name])
+    app.config["SQLALCHEMY_ECHO"] = True  # Enable SQL logging
     config[config_name].init_app(app)
 
     bootstrap.init_app(app)

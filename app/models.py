@@ -337,7 +337,13 @@ class Product(db.Model):
 
     def __repr__(self):
         """Representation."""
-        return "<Products %r>" % self.product_name
+        return f"""
+                Product:
+                    id: {self.id}
+                    product_name: {self.product_name}
+                    quantity_per_unit: {self.quantity_per_unit}
+                    unit_price: {self.unit_price}
+            """
 
 
 class Employee(db.Model):

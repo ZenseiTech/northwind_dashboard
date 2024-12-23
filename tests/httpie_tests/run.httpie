@@ -1,0 +1,4 @@
+
+http --form POST http://localhost:5000/api/v1/productdetails request='{"cmd":"get","selected":[],"limit":5,"offset":0,"search":[{"field":"unit_price","type":"int","operator":"more","value":50},{"field":"product_name","type":"text","operator":"begins","value":"M"}],"searchLogic":"AND","sort":[{"field":"productName","direction":"asc"}]}'
+
+http --form  POST http://localhost:5000/api/v1/productdetails request='{"cmd":"get","selected":[],"limit":5,"offset":0}'

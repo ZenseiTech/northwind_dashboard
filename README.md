@@ -62,7 +62,9 @@ If you don't want to run a hook at runtime in pre-commit
 
     SKIP=unittests pre-commit run --all-files
 
-     SKIP=unittests git commit -m <...>
+    SKIP=unittests git commit -m <...>
+
+    SKIP=unittests,flake8 git commit -m <...>
 
 
 Creation of blueprint ...
