@@ -23,37 +23,64 @@ operators_map = {
     "toggle": "list",
 }
 
+field_map = {
+    "unitPrice": "unit_price",
+    "productName": "product_name",
+    "quantityPerUnit": "quantity_per_unit",
+    "unitPrice": "unit_price",
+    "unitsInStock": "units_in_stock",
+    "unitsOnOrder": "units_on_order",
+    "reorderLevel": "reorder_level",
+    "discontinued": "discontinued",
+    "categoryName": "category_name",
+    "supplierName": "supplier_name",
+    "supplierRegion": "supplier_region",
+}
+
+
+def create_dinamic_sort(request_data, object):
+    """Create sort dinamically."""
+    print(dir(object))
+    asc = True
+    for sort in request_data.sort:
+        print(f"---------> {sort}")
+        attr = getattr(object, field_map[sort.field])
+        if "desc" in sort.direction:
+            asc = False
+        return attr, asc
+
+    return None
+
 
 def create_dinamic_filters(request_data, object):
     """Create search filter dynamically."""
     filters = []
 
     for search in request_data.search:
+        attr = getattr(object, field_map[search.field])
         type = operators_map[search.type]
         if type == "number":
             if search.operator == "more":
-                filters.append(object.unit_price > search.value)
+                filters.append(attr > search.value)
             elif search.operator == "more than":
-                filters.append(object.unit_price >= search.value)
+                filters.append(attr >= search.value)
             elif search.operator == "less":
-                filters.append(object.unit_price < search.value)
+                filters.append(attr < search.value)
             elif search.operator == "less than":
-                filters.append(object.unit_price <= search.value)
+                filters.append(attr <= search.value)
             elif search.operator == "between":
-                filters.append(
-                    object.unit_price.between(search.value[0], search.value[1])
-                )
+                filters.append(attr.between(search.value[0], search.value[1]))
             else:
-                filters.append(object.unit_price == search.value)
+                filters.append(attr == search.value)
         if type == "text":
             if search.operator == "begins":
-                filters.append(object.product_name.like(search.value + "%"))
+                filters.append(attr.like(search.value + "%"))
             elif search.operator == "ends":
-                filters.append("%" + object.product_name.like(search.value))
+                filters.append("%" + attr.like(search.value))
             elif search.operator == "contains":
-                filters.append("%" + object.product_name.like(search.value) + "%")
+                filters.append("%" + attr.like(search.value) + "%")
             else:
-                filters.append(object.product_name == search.value)
+                filters.append(attr == search.value)
         # if type == "date":
 
     return filters

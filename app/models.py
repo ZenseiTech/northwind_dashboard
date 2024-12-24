@@ -328,8 +328,12 @@ class Product(db.Model):
     units_on_order = db.Column(db.Integer)
     reorder_level = db.Column(db.Integer)
     discontinued = db.Column(db.String(64))
+
     supplier_id = db.Column(db.Integer, db.ForeignKey("suppliers.id"))
+    supplier = db.relationship("Supplier", backref=db.backref("product", lazy=True))
+
     category_id = db.Column(db.Integer, db.ForeignKey("categories.id"))
+    category = db.relationship("Category", backref=db.backref("product", lazy=True))
 
     orders = db.relationship(
         "Order", secondary="order_details", back_populates="products"

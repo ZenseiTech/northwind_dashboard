@@ -97,7 +97,7 @@ def create_grid_data(data):
 
 def build_request(body):
     """Return the built request object."""
-    print(body)
+    # print(body)
     data = json.loads(body)
 
     if data["cmd"] == "get":
