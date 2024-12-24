@@ -1,6 +1,8 @@
 """Grid response."""
 import json
 
+num_to_bool = {"1": True, "0": False}
+
 
 def product_response(data):
     """Create the product response."""
@@ -19,7 +21,7 @@ def product_response(data):
         record["unitsInStock"] = d.units_in_stock
         record["unitsOnOrder"] = d.units_on_order
         record["reorderLevel"] = d.reorder_level
-        record["discontinued"] = d.discontinued
+        record["discontinued"] = num_to_bool[d.discontinued]
         record["categoryName"] = d.category_name
         record["supplierName"] = d.supplier_name
         record["supplierRegion"] = d.supplier_region

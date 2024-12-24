@@ -37,6 +37,8 @@ field_map = {
     "supplierRegion": "supplier_region",
 }
 
+bool_map = {"N": 0, "Y": 1}
+
 
 def create_dinamic_sort(request_data, object):
     """Create sort dinamically."""
@@ -72,7 +74,14 @@ def create_dinamic_filters(request_data, object):
                 filters.append(attr.between(search.value[0], search.value[1]))
             else:
                 filters.append(attr == search.value)
-        if type == "text":
+        elif type == "list":
+            filters.append(attr == bool_map[search.value])
+        elif type == "date":
+            if search.operator == "between":
+                filters.append(attr.between(search.value[0], search.value[1]))
+            else:
+                filters.append(attr.between(search.value))
+        elif type == "text":
             if search.operator == "begins":
                 filters.append(attr.like(search.value + "%"))
             elif search.operator == "ends":
