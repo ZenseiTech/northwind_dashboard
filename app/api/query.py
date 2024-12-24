@@ -49,7 +49,7 @@ def create_dinamic_sort(request_data, object):
             asc = False
         return attr, asc
 
-    return None
+    return None, asc
 
 
 def create_dinamic_filters(request_data, object):

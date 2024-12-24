@@ -5,14 +5,14 @@ from app.api import response
 from app.api.query import create_dinamic_filters, create_dinamic_sort
 from app.api.request import build_request
 
-from ..models import Category, Product
+from ..models import ProductView
 from . import api
 
 
 @api.route("/products", methods=("GET", "POST"))
 def products():
     """Product API."""
-    products = Product.query.all()
+    products = ProductView.query.all()
     # categories = Category.query.filter_by(categoryName='Produce').all()
     # categories = Category.query.limit(2).all()
     # Category.query.limit
@@ -26,15 +26,15 @@ def product_details():
     """Product Details API."""
     print("===> Inside customer details....")
 
-    query = Product.query.join(Category)
+    query = ProductView.query
 
     request_data = build_request(body=request.form["request"])
-    filters = create_dinamic_filters(request_data=request_data, object=Product)
+    filters = create_dinamic_filters(request_data=request_data, object=ProductView)
 
     for filter in filters:
         query = query.filter(filter)
 
-    sorting, asc = create_dinamic_sort(request_data=request_data, object=Product)
+    sorting, asc = create_dinamic_sort(request_data=request_data, object=ProductView)
 
     if sorting:
         if asc:

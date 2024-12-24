@@ -316,6 +316,33 @@ class Supplier(db.Model):
         return "<Companies %r>" % self.company_name
 
 
+class ProductView(db.Model):
+    """Product model."""
+
+    __tablename__ = "product_view"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    product_name = db.Column(db.String(64), nullable=False, unique=True, index=True)
+    quantity_per_unit = db.Column(db.Integer)
+    unit_price = db.Column(db.Float)
+    units_in_stock = db.Column(db.Integer)
+    units_on_order = db.Column(db.Integer)
+    reorder_level = db.Column(db.Integer)
+    discontinued = db.Column(db.String(64))
+    supplier_name = db.Column(db.String(64))
+    supplier_region = db.Column(db.String(64))
+    category_name = db.Column(db.String)
+
+    def __repr__(self):
+        """Representation."""
+        return f"""
+                ProductView:
+                    id: {self.id}
+                    product_name: {self.product_name}
+                    quantity_per_unit: {self.quantity_per_unit}
+                    unit_price: {self.unit_price}
+            """
+
+
 class Product(db.Model):
     """Product model."""
 

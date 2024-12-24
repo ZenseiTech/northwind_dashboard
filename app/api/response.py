@@ -20,9 +20,9 @@ def product_response(data):
         record["unitsOnOrder"] = d.units_on_order
         record["reorderLevel"] = d.reorder_level
         record["discontinued"] = d.discontinued
-        record["categoryName"] = d.category.category_name
-        record["supplierName"] = d.supplier.company_name
-        record["supplierRegion"] = d.supplier.region
+        record["categoryName"] = d.category_name
+        record["supplierName"] = d.supplier_name
+        record["supplierRegion"] = d.supplier_region
 
         records.append(record)
 
