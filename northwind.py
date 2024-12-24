@@ -5,6 +5,7 @@ import sys
 
 import click
 from dotenv import load_dotenv
+from flask import render_template
 from flask_migrate import Migrate, upgrade
 
 from app import create_app, db
@@ -107,12 +108,18 @@ def deploy():
     Role.insert_roles()
 
 
-def create_secret_token():
-    """Create secre token to swarth CRFS."""
-    from itsdangerous import URLSafeSerializer
+# def create_secret_token():
+#     """Create secre token to swarth CRFS."""
+#     from itsdangerous import URLSafeSerializer
 
-    auth_s = URLSafeSerializer("secret key", "auth")
-    return auth_s.dumps({"id": 5, "name": "Secret word"})
+#     auth_s = URLSafeSerializer("secret key", "auth")
+#     return auth_s.dumps({"id": 5, "name": "Secret word"})
+
+
+@app.route("/")
+def index():
+    """Home page."""
+    return render_template("index.html")
 
 
 if __name__ == "__main__":
