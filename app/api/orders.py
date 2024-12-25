@@ -9,11 +9,6 @@ from ..models import OrderView
 from . import api
 
 
-def info():
-    """Print info."""
-    print("Orders added to api blueprint")
-
-
 @api.route("/orderdetails", methods=("POST",))
 def order_details():
     """Order Details API."""

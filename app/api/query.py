@@ -36,6 +36,7 @@ field_map = {
     "supplierName": "supplier_name",
     "supplierRegion": "supplier_region",
     "shipCountry": "ship_country",
+    "orderDate": "order_date",
 }
 
 bool_map = {"N": 0, "Y": 1}

@@ -9,11 +9,6 @@ from ..models import ProductView
 from . import api
 
 
-def info():
-    """Print info."""
-    print("Products added to api blueprint")
-
-
 @api.route("/products", methods=("GET", "POST"))
 def products():
     """Product API."""
