@@ -1,5 +1,7 @@
 """Filter queries."""
 
+import re
+
 operators_map = {
     "text": "text",
     "int": "number",
@@ -23,23 +25,13 @@ operators_map = {
     "toggle": "list",
 }
 
-field_map = {
-    "unitPrice": "unit_price",
-    "productName": "product_name",
-    "quantityPerUnit": "quantity_per_unit",
-    "unitPrice": "unit_price",
-    "unitsInStock": "units_in_stock",
-    "unitsOnOrder": "units_on_order",
-    "reorderLevel": "reorder_level",
-    "discontinued": "discontinued",
-    "categoryName": "category_name",
-    "supplierName": "supplier_name",
-    "supplierRegion": "supplier_region",
-    "shipCountry": "ship_country",
-    "orderDate": "order_date",
-}
-
 bool_map = {"N": 0, "Y": 1}
+
+
+def camel_case_to_snake(key_value):
+    """Change camelcase to snakecase."""
+    pattern = re.compile(r"(?<!^)(?=[A-Z])")
+    return pattern.sub("_", key_value).lower()
 
 
 def create_dinamic_sort(request_data, object):
@@ -48,7 +40,7 @@ def create_dinamic_sort(request_data, object):
     asc = True
     for sort in request_data.sort:
         print(f"---------> {sort}")
-        attr = getattr(object, field_map[sort.field])
+        attr = getattr(object, camel_case_to_snake(sort.field))
         if "desc" in sort.direction:
             asc = False
         return attr, asc
@@ -61,7 +53,7 @@ def create_dinamic_filters(request_data, object):
     filters = []
 
     for search in request_data.search:
-        attr = getattr(object, field_map[search.field])
+        attr = getattr(object, camel_case_to_snake(search.field))
         type = operators_map[search.type]
         if type == "number":
             if search.operator == "more":

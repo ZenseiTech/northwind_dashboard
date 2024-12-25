@@ -51,9 +51,9 @@ def order_response(data, count):
     for d in data:
         record = {}
         record["recid"] = d.id
-        record["customerCompanyName"] = d.customer_name
+        record["customerName"] = d.customer_name
         record["customerId"] = d.customer_id
-        record["employeeFullName"] = d.employee_name
+        record["employeeName"] = d.employee_name
         record["freight"] = d.freight
         record["orderDate"] = date_format(d.order_date, "%Y-%m-%d")
         record["requiredDate"] = date_format(d.required_date, "%Y-%m-%d")

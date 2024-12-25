@@ -243,9 +243,9 @@ var config = {
             { field: 'shipCity', caption: 'Ship City', type: 'list', options: { items: cities } },
         ],
         columns: [
-            { field: 'customerCompanyName', caption: 'Customer Name', size: '160px', searchable: true, sortable: true, info: true, frozen: true },
-            { field: 'customerId', caption: 'Customer Id', size: '140px', searchable: true, sortable: true },
-            { field: 'employeeFullName', caption: 'Employee Name', size: '160px', searchable: true, sortable: true },
+            { field: 'customerId', caption: 'Customer Id', size: '140px', searchable: true, sortable: true, frozen: true },
+            { field: 'customerName', caption: 'Customer Name', size: '160px', searchable: true, sortable: true, info: true, frozen: true },
+            { field: 'employeeName', caption: 'Employee Name', size: '160px', searchable: true, sortable: true },
             { field: 'freight', caption: 'Freight', size: '110px', searchable: true, sortable: true, render: 'money' },
             { field: 'orderDate', caption: 'Order Date', size: '120px', searchable: true, sortable: true },
             { field: 'requiredDate', caption: 'Required Date', size: '130px', searchable: true, sortable: true },
