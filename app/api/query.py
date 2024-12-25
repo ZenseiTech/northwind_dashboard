@@ -35,6 +35,7 @@ field_map = {
     "categoryName": "category_name",
     "supplierName": "supplier_name",
     "supplierRegion": "supplier_region",
+    "shipCountry": "ship_country",
 }
 
 bool_map = {"N": 0, "Y": 1}
@@ -42,7 +43,7 @@ bool_map = {"N": 0, "Y": 1}
 
 def create_dinamic_sort(request_data, object):
     """Create sort dinamically."""
-    print(dir(object))
+    # print(dir(object))
     asc = True
     for sort in request_data.sort:
         print(f"---------> {sort}")
@@ -75,7 +76,10 @@ def create_dinamic_filters(request_data, object):
             else:
                 filters.append(attr == search.value)
         elif type == "list":
-            filters.append(attr == bool_map[search.value])
+            if "Y" in search.value or "N" in search.value:
+                filters.append(attr == bool_map[search.value])
+            else:
+                filters.append(attr == search.value)
         elif type == "date":
             if search.operator == "between":
                 filters.append(attr.between(search.value[0], search.value[1]))

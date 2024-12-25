@@ -3,6 +3,11 @@ from ..models import Category
 from . import api
 
 
+def info():
+    """Print info."""
+    print("Categories added to api blueprint")
+
+
 @api.route("/categories", methods=("GET", "POST"))
 def categories():
     """Categories API."""

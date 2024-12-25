@@ -2,6 +2,10 @@
 
 from flask import Blueprint
 
+from . import categories, orders, products
+
 api = Blueprint("api", __name__)
 
-from . import categories, products
+categories.info()
+orders.info()
+products.info()

@@ -9,6 +9,11 @@ from ..models import ProductView
 from . import api
 
 
+def info():
+    """Print info."""
+    print("Products added to api blueprint")
+
+
 @api.route("/products", methods=("GET", "POST"))
 def products():
     """Product API."""
@@ -24,7 +29,7 @@ def products():
 @api.route("/productdetails", methods=("POST",))
 def product_details():
     """Product Details API."""
-    print("===> Inside customer details....")
+    print("===> Inside product details....")
 
     query = ProductView.query
 
@@ -33,6 +38,9 @@ def product_details():
 
     for filter in filters:
         query = query.filter(filter)
+
+    count = query.count()
+    print(f"---------------> Count is: {count}")
 
     sorting, asc = create_dinamic_sort(request_data=request_data, object=ProductView)
 
@@ -48,7 +56,4 @@ def product_details():
     # calling the query ...
     products = query.all()
 
-    # for product in products:
-    #     print(f"{product}")
-
-    return response.grid_response("Product", products)
+    return response.grid_response("Product", products, count)

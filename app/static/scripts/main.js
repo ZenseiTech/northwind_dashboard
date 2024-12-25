@@ -205,7 +205,7 @@ var config = {
     },
     orders: {
         name: 'orders',
-        url: server_url + '/orders',
+        url: server_url + '/orderdetails',
         header: 'Orders',
         // style: grid_style,
         limit: 500,

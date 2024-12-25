@@ -447,6 +447,36 @@ class Shipper(db.Model):
         return f"<Shippers {self.company_name} {self.phone}>"
 
 
+class OrderView(db.Model):
+    """OrderView model."""
+
+    __tablename__ = "order_view"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    order_date = db.Column(db.DateTime(), nullable=False)
+    required_date = db.Column(db.DateTime(), nullable=False)
+    shipped_date = db.Column(db.DateTime(), nullable=True)
+    freight = db.Column(db.Integer, default=0)
+    ship_name = db.Column(db.String(64), nullable=False)
+    ship_address = db.Column(db.String(64), nullable=False)
+    ship_city = db.Column(db.String(64), nullable=False)
+    ship_region = db.Column(db.String(64), nullable=False)
+    ship_postal_code = db.Column(db.String(64), nullable=True)
+    ship_country = db.Column(db.String(64), nullable=False)
+
+    employee_name = db.Column(db.String(64), nullable=False)
+    customer_name = db.Column(db.String(64), nullable=False)
+    ship_name = db.Column(db.String(64), nullable=False)
+
+    customer_id = db.Column(db.Integer, db.ForeignKey("customers.id"))
+    employee_id = db.Column(db.Integer, db.ForeignKey("employees.id"))
+    ship_via = db.Column(db.Integer, db.ForeignKey("shippers.id"))
+
+    def __repr__(self):
+        """Representation."""
+        return f"<OrderView order.id = {self.id} customer_id: {self.customer_name}>"
+
+
 class Order(db.Model):
     """Order model."""
 
