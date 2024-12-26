@@ -21,14 +21,20 @@ def products():
     return {"status": "Ok"}
 
 
-@api.route("/productdetails", methods=("POST",))
+@api.route(
+    "/productdetails",
+    methods=(
+        "GET",
+        "POST",
+    ),
+)
 def product_details():
     """Product Details API."""
     print("===> Inside product details....")
 
     query = ProductView.query
 
-    request_data = build_request(body=request.form["request"])
+    request_data = build_request(body=request.values["request"])
     filters = create_dinamic_filters(request_data=request_data, object=ProductView)
 
     for filter in filters:

@@ -3,9 +3,337 @@
 {% block content %}
 <h1>{% block title %}NorthWind UI{% endblock %}</h1>
 <div id="main" style="width: 100%; height: 630px;"></div>
-<link rel="stylesheet" type="text/css" href="../static/styles/w2ui-1.5.rc1.css" />
+<link rel="stylesheet" type="text/css" href="https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
 <link rel="stylesheet" type="text/css" href="../static/styles/w2ui-overrides.css" />
-<script src="../static/scripts/jquery-2.1.0.min.js"></script>
-<script type="text/javascript" src="../static/scripts/w2ui-1.5.rc1.js"></script>
-<script src="../static/scripts/main.js"></script>
+
+<script type="module">
+
+    import { w2layout, w2sidebar, w2grid, query } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
+
+    var pstyle = 'border: 1px solid #dfdfdf; padding: 5px; font-size:11px;';
+    var pstyle2 = 'border: 1px solid #dfdfdf; padding: 5px;  text-align: center;';
+    var grid_style = 'font-size:16px;color:black';
+
+    var countries = ['USA', 'Canada', 'France', 'Ireland', 'Belgium', 'Venezuela', 'Norway', 'UK', 'Spain', 'Switzerland', 'Argentina', 'Portugal', 'Austria', 'Germany', 'Brazil', 'Mexico', 'Finland', 'Italy', 'Denmark', 'Poland', 'Sweden'];
+
+    var regions = []
+
+    var cities = ['Aachen', 'Albuquerque', 'Anchorage', 'Barcelona', 'Barquisimeto', 'Bergamo', 'Berlin', 'Bern', 'Boise', 'Brandenburg', 'Bruxelles', 'Bräcke', 'Buenos Aires', 'Butte', 'Campinas', 'Caracas', 'Charleroi', 'Colchester', 'Cork', 'Cowes', 'Cunewalde', 'Elgin', 'Eugene', 'Frankfurt a.M.', 'Genève', 'Graz', 'Helsinki', 'I. de Margarita', 'Kirkland', 'Kobenhavn', 'Köln', 'Lander'];
+
+
+    const server_url = 'http://localhost:5000/api/v1';
+
+    function get_regions() {
+        console.log("Calling regions ....")
+        fetch(server_url + '/shipregions')
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                regions = data;
+            })
+    };
+
+
+    let config = {
+        layout: {
+            name: 'layout',
+            padding: 0,
+            panels: [
+                { type: 'left', size: 150, resizable: true, style: pstyle, minSize: 50 },
+                { type: 'main', minSize: 550, style: pstyle, overflow: 'hidden' }
+            ]
+        },
+        sidebar: {
+            name: 'sidebar',
+            flatButton: false,
+            nodes: [
+                {
+                    id: 'general', text: 'General', group: true, expanded: true, nodes: [
+                        { id: 'customers_grid', text: 'Customers', icon: 'fa fa-pencil-square-o' },
+                        { id: 'product_details_grid', text: 'Product Details', icon: 'fa fa-pencil-square-o', selected: true },
+                        { id: 'orders_grid', text: 'Orders', icon: 'fa fa-pencil-square-o' },
+                    ]
+                }
+            ],
+            onFlat: function (event) {
+                $('#sidebar').css('width', (event.goFlat ? '25px' : '200px'));
+            },
+            onClick: function (event) {
+                switch (event.target) {
+                    case 'customers_grid':
+                        layout.html('main', customers)
+                        break;
+                    case 'orders_grid':
+                        layout.html('main', orders)
+                        break;
+                    case 'product_details_grid':
+                        layout.html('main', product_details)
+                        break;
+                }
+            }
+        },
+        customers: {
+            name: 'customers',
+            url: server_url + '/customers',
+            header: 'Customers',
+            // style: grid_style,
+            limit: 500,
+            show: {
+                header: true,
+                toolbar: true,
+                footer: true,
+                toolbarSave: true,
+                toolbarAdd: true
+            },
+            toolbar: {
+                items: [
+                    { type: 'break' },
+                    { type: 'button', id: 'cancel', text: 'Cancel', icon: 'w2ui-icon-cross' },
+                    { type: 'spacer' },
+                    { type: 'button', id: 'excel', text: 'Excel', icon: 'w2ui-icon-plus' },
+                ],
+                onClick: function (target, data) {
+                    console.log("--- onClick: " + target);
+                    if (target === 'cancel') {
+                        customers.reload();
+                    } else if (target === 'excel') {
+
+                    }
+                }
+            },
+            multiSearch: true,
+            searches: [
+
+            ],
+            // reorderColumns: true,
+            columns: [
+                { field: 'companyName', text: 'Company Name', size: '170px', searchable: true, sortable: true, info: true, frozen: true, editable: { type: 'text' } },
+                { field: 'contactName', text: 'Contact Name', size: '140px', searchable: true, sortable: true, editable: { type: 'text' } },
+                { field: 'address', text: 'Address', size: '160px', searchable: true, sortable: true, editable: { type: 'text' } },
+                { field: 'city', text: 'City', size: '110px', searchable: true, sortable: true, editable: { type: 'text' } },
+                { field: 'contactTitle', text: 'Contact Title', size: '120px', searchable: true, sortable: true, editable: { type: 'text' } },
+                { field: 'country', text: 'Country', size: '130px', searchable: true, sortable: true, editable: { type: 'text' } },
+                { field: 'fax', text: 'Fax', size: '150px', searchable: true, sortable: true, editable: { type: 'text' } },
+                { field: 'phone', text: 'Phone', size: '150px', searchable: true, sortable: true, editable: { type: 'text' } },
+                { field: 'postalCode', text: 'Postal Code', size: '150px', searchable: true, sortable: true, editable: { type: 'text' } },
+                { field: 'region', text: 'Region', size: '150px', searchable: true, sortable: true, editable: { type: 'text' } }
+            ],
+            onAdd: function (event) {
+
+            },
+            onRequest: function (event) {
+                console.log('-- server call --');
+                console.log(event);
+            },
+            onSave: function (event) {
+                event.onComplete = function () {
+                    if (event.status === "success") {
+                        console.log('---On save onComplete: ' + event.status);
+
+                    }
+                }
+            },
+            onChange: function (event) {
+                console.log(event);
+
+            },
+            onDblClick: function (event) {
+                console.log('Column is: ' + event.column + ' and recid is: ' + event.recid);
+                if (event.column === 0) {
+
+                }
+            },
+            onKeydown: function (event) {
+
+            }
+        },
+        product_details: {
+            name: 'product_details',
+            url: server_url + '/productdetails',
+            header: 'Product Details',
+            // style: grid_style,
+            limit: 500,
+            show: {
+                header: true,
+                toolbar: true,
+                footer: true,
+                toolbarSave: true,
+                toolbarAdd: true
+            },
+            toolbar: {
+                items: [
+                    { type: 'break' },
+                    { type: 'button', id: 'cancel', text: 'Cancel', icon: 'w2ui-icon-cross' },
+                    { type: 'spacer' },
+                    { type: 'button', id: 'excel', text: 'Excel', icon: 'w2ui-icon-plus' },
+                ],
+                onClick: function (target, data) {
+                    console.log("--- onClick: " + target);
+                    if (target === 'cancel') {
+                        product_details.reload();
+                    } else if (target === 'excel') {
+
+                    }
+                }
+            },
+            multiSearch: true,
+            searches: [
+                { field: 'unitPrice', label: 'Unit Price', type: 'money' },
+                { field: 'unitsInStock', label: 'Units In Stock', type: 'int' },
+                { field: 'unitsOnOrder', label: 'Units In Order', type: 'int' },
+                { field: 'reorderLevel', label: 'Reorder Level', type: 'int' },
+                { field: 'discontinued', label: 'Discontinued', type: 'list', options: { items: ['Y', 'N'] } },
+            ],
+            // reorderColumns: true,
+            columns: [
+                { field: 'productName', text: 'Product Name', size: '170px', searchable: true, sortable: true, info: true, frozen: true, editable: { type: 'text' } },
+                { field: 'quantityPerUnit', text: 'Qty Per Unit', size: '140px', searchable: true, sortable: true, editable: { type: 'text' } },
+                { field: 'unitPrice', text: 'Unit Price', size: '160px', searchable: true, sortable: true, render: 'money', editable: { type: 'money' } },
+                { field: 'unitsInStock', text: 'Units In Stock', size: '110px', searchable: true, sortable: true, render: 'int', editable: { type: 'int' } },
+                { field: 'unitsOnOrder', text: 'Units On Order', size: '120px', searchable: true, sortable: true, render: 'int', editable: { type: 'int' } },
+                { field: 'reorderLevel', text: 'Reorder Level', size: '130px', searchable: true, sortable: true, render: 'int', editable: { type: 'int' } },
+                { field: 'discontinued', text: 'Discontinued', size: '150px', searchable: true, sortable: true, editable: { type: 'checkbox', style: 'text-align: center' } },
+                { field: 'categoryName', text: 'Category Name', size: '150px', searchable: true, sortable: true, editable: { type: 'text' } },
+                { field: 'supplierName', text: 'Supplier Name', size: '150px', searchable: true, sortable: true, editable: { type: 'text' } },
+                { field: 'supplierRegion', text: 'Supplier Region', size: '150px', searchable: true, sortable: true, editable: { type: 'text' } }
+            ],
+            onAdd: function (event) {
+
+            },
+            onRequest: function (event) {
+                console.log('-- server call --');
+                console.log(event);
+            },
+            onSave: function (event) {
+                event.onComplete = function () {
+                    if (event.status === "success") {
+                        console.log('---On save onComplete: ' + event.status);
+
+                    }
+                }
+            },
+            onChange: function (event) {
+                console.log(event);
+
+            },
+            onDblClick: function (event) {
+                console.log('Column is: ' + event.column + ' and recid is: ' + event.recid);
+                if (event.column === 0) {
+
+                }
+            },
+            onKeydown: function (event) {
+
+            }
+        },
+        orders: {
+            name: 'orders',
+            url: server_url + '/orderdetails',
+            header: 'Orders',
+            // style: grid_style,
+            limit: 500,
+            show: {
+                header: true,
+                toolbar: true,
+                footer: true,
+                // toolbarSave: true,
+                // toolbarAdd: true
+            },
+            toolbar: {
+                items: [
+                    { type: 'break' },
+                    { type: 'button', id: 'cancel', text: 'Cancel', icon: 'w2ui-icon-cross' },
+                    { type: 'spacer' },
+                    { type: 'button', id: 'excel', text: 'Excel', icon: 'w2ui-icon-plus' },
+                ],
+                onClick: function (target, data) {
+                    console.log("--- onClick: " + target);
+                    if (target === 'cancel') {
+                        orders.reload();
+                    } else if (target === 'excel') {
+
+                    }
+                }
+            },
+            multiSearch: true,
+            searches: [
+                { field: 'freight', label: 'Freight', type: 'money' },
+                { field: 'shipCountry', label: 'Ship Country', type: 'list', options: { items: countries } },
+                { field: 'shipRegion', label: 'Ship Region', type: 'list', options: { items: regions } },
+                { field: 'shipCity', label: 'Ship City', type: 'list', options: { items: cities } },
+                { field: 'orderDate', label: 'Order Date', type: 'date' },
+                { field: 'requiredDate', label: 'Required Date', type: 'date' },
+                { field: 'shippedDate', label: 'Shipped Date', type: 'date' },
+            ],
+            columns: [
+                { field: 'customerId', text: 'Customer Id', size: '80px', searchable: true, sortable: true, frozen: true },
+                { field: 'customerName', text: 'Customer Name', size: '160px', searchable: true, sortable: true, info: true, frozen: true },
+                { field: 'employeeName', text: 'Employee Name', size: '160px', searchable: true, sortable: true },
+                { field: 'freight', text: 'Freight', size: '110px', searchable: true, sortable: true, render: 'money' },
+                { field: 'orderDate', text: 'Order Date', size: '120px', searchable: true, sortable: true },
+                { field: 'requiredDate', text: 'Required Date', size: '130px', searchable: true, sortable: true },
+                { field: 'shippedDate', text: 'Ship Date', size: '150px', searchable: true, sortable: true },
+                { field: 'shippedAddress', text: 'Shipped Address', size: '150px', searchable: true, sortable: true },
+                { field: 'shipCity', text: 'Ship City', size: '150px', searchable: true, sortable: true },
+                { field: 'shipCountry', text: 'Ship Country', size: '150px', searchable: true, sortable: true },
+                { field: 'shipperName', text: 'Shipper Name', size: '150px', searchable: true, sortable: true },
+                { field: 'shipPostalCode', text: 'Ship Postal Code', size: '150px', searchable: true, sortable: true },
+                { field: 'shipRegion', text: 'Ship Region', size: '150px', searchable: true, sortable: true },
+                { field: 'shipperName', text: 'Shipper Name', size: '150px', searchable: true, sortable: true }
+            ],
+            onAdd: function (event) {
+
+            },
+            onRequest: function (event) {
+                console.log('-- server call --');
+                console.log(event);
+            },
+            onSave: function (event) {
+                event.onComplete = function () {
+                    if (event.status === "success") {
+                        console.log('---On save onComplete: ' + event.status);
+
+                    }
+                }
+            },
+            onChange: function (event) {
+                console.log(event);
+
+            },
+            onDblClick: function (event) {
+                console.log('Column is: ' + event.column + ' and recid is: ' + event.recid);
+                if (event.column === 0) {
+
+                }
+            },
+            onKeydown: function (event) {
+
+            },
+            onClick(event) {
+                console.log("On click...: " + event.recid);
+            },
+            onLoad: function (event) {
+                console.log("Loading ...");
+                orders.searches[2].options.items = regions
+                event.onComplete = function () {
+                    console.log("onComplete orders Loading ...");
+                }
+            }
+        },
+    };
+
+    let layout = new w2layout(config.layout)
+    let sidebar = new w2sidebar(config.sidebar)
+    let customers = new w2grid(config.customers)
+    let product_details = new w2grid(config.product_details)
+    let orders = new w2grid(config.orders)
+    // initialization
+    layout.render('#main')
+    layout.html('left', sidebar)
+    layout.html('main', product_details)
+
+    get_regions()
+
+</script>
 {% endblock %}

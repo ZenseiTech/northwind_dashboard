@@ -56,13 +56,13 @@ def create_dinamic_filters(request_data, object):
         attr = getattr(object, camel_case_to_snake(search.field))
         type = operators_map[search.type]
         if type == "number":
-            if search.operator == "more":
+            if search.operator == ">":
                 filters.append(attr > search.value)
-            elif search.operator == "more than":
+            elif search.operator == ">=":
                 filters.append(attr >= search.value)
-            elif search.operator == "less":
+            elif search.operator == "<":
                 filters.append(attr < search.value)
-            elif search.operator == "less than":
+            elif search.operator == "<=":
                 filters.append(attr <= search.value)
             elif search.operator == "between":
                 filters.append(attr.between(search.value[0], search.value[1]))

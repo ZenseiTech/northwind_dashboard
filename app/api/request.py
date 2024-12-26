@@ -39,7 +39,6 @@ class Search:
 class GetRequest:
     """Request."""
 
-    cmd: str
     limit: int
     offset: int
     searchLogic: int
@@ -49,7 +48,6 @@ class GetRequest:
     def __repr__(self):
         """Print representation."""
         return f"""
-                cmd: {self.cmd}
                 limit: {self.limit}
                 offset: {self.offset}
                 searchLogic: {self.searchLogic}
@@ -86,7 +84,6 @@ def create_grid_data(data):
     #     print(f"selected: {data['selected']}")
 
     return GetRequest(
-        cmd=data["cmd"],
         limit=data["limit"],
         offset=data["offset"],
         searchLogic=searchLogic,
@@ -100,7 +97,4 @@ def build_request(body):
     # print(body)
     data = json.loads(body)
 
-    if data["cmd"] == "get":
-        return create_grid_data(data)
-    else:
-        return {"Request": "Unknown cmd request"}
+    return create_grid_data(data)

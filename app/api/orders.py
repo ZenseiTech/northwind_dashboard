@@ -19,14 +19,20 @@ def ship_regions():
     return regions
 
 
-@api.route("/orderdetails", methods=("POST",))
+@api.route(
+    "/orderdetails",
+    methods=(
+        "GET",
+        "POST",
+    ),
+)
 def order_details():
     """Order Details API."""
     print("===> Inside order details....")
 
     query = OrderView.query
 
-    request_data = build_request(body=request.form["request"])
+    request_data = build_request(body=request.values["request"])
     filters = create_dinamic_filters(request_data=request_data, object=OrderView)
 
     for filter in filters:

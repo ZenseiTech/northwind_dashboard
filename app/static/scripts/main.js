@@ -24,7 +24,7 @@ function get_regions() {
 };
 
 
-var config = {
+let config = {
     layout: {
         name: 'layout',
         padding: 0,
@@ -313,19 +313,29 @@ var config = {
     },
 };
 
-$(function () {
+let layout = new w2layout(config.layout)
+let sidebar = new w2sidebar(config.sidebar)
+let grid_customers = new w2grid(config.customers)
+let grid_product_details = new w2grid(config.product_details)
+let grid_orders = new w2grid(config.orders)
+// initialization
+layout.render('#main')
+layout.html('left', sidebar)
+layout.html('main', grid_product_details)
 
-    get_regions()
+// $(function () {
 
-    // initialization
-    // w2utils.settings.dataType = 'HTTP';
-    w2utils.settings.dateFormat = 'yyyy-mm-dd';
-    $('#main').w2layout(config.layout);
-    w2ui.layout.content('left', $().w2sidebar(config.sidebar));
+//     get_regions()
 
-    // in memory initialization
-    $().w2grid(config.customers);
-    $().w2grid(config.product_details);
-    $().w2grid(config.orders);
+//     // initialization
+//     // w2utils.settings.dataType = 'HTTP';
+//     w2utils.settings.dateFormat = 'yyyy-mm-dd';
+//     $('#main').w2layout(config.layout);
+//     w2ui.layout.content('left', $().w2sidebar(config.sidebar));
 
-});
+//     // in memory initialization
+//     $().w2grid(config.customers);
+//     $().w2grid(config.product_details);
+//     $().w2grid(config.orders);
+
+// });
