@@ -5,8 +5,18 @@ from app.api import response
 from app.api.query import create_dinamic_filters, create_dinamic_sort
 from app.api.request import build_request
 
-from ..models import OrderView
+from ..models import OrderView, ShipRegions
 from . import api
+
+
+@api.route("/shipregions", methods=("GET", "POST"))
+def ship_regions():
+    """Retreive regions from api."""
+    data = ShipRegions.query.all()
+    regions = []
+    for d in data:
+        regions.append(d.region_name)
+    return regions
 
 
 @api.route("/orderdetails", methods=("POST",))

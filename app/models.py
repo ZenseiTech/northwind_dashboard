@@ -447,6 +447,14 @@ class Shipper(db.Model):
         return f"<Shippers {self.company_name} {self.phone}>"
 
 
+class ShipRegions(db.Model):
+    """ShipRegions model."""
+
+    __tablename__ = "ship_regions"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    region_name = db.Column(db.String(64), nullable=True)
+
+
 class OrderView(db.Model):
     """OrderView model."""
 

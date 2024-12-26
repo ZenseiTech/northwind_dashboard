@@ -5,11 +5,24 @@ var grid_style = 'font-size:16px;color:black';
 
 var countries = ['USA', 'Canada', 'France', 'Ireland', 'Belgium', 'Venezuela', 'Norway', 'UK', 'Spain', 'Switzerland', 'Argentina', 'Portugal', 'Austria', 'Germany', 'Brazil', 'Mexico', 'Finland', 'Italy', 'Denmark', 'Poland', 'Sweden'];
 
-var regions = ['British Isles', 'Central America', 'Eastern Europe', 'North America', 'Northern Europe', 'Scandinavia', 'South America', 'Southern Europe', 'Western Europe'];
+var regions = []
 
 var cities = ['Aachen', 'Albuquerque', 'Anchorage', 'Barcelona', 'Barquisimeto', 'Bergamo', 'Berlin', 'Bern', 'Boise', 'Brandenburg', 'Bruxelles', 'Bräcke', 'Buenos Aires', 'Butte', 'Campinas', 'Caracas', 'Charleroi', 'Colchester', 'Cork', 'Cowes', 'Cunewalde', 'Elgin', 'Eugene', 'Frankfurt a.M.', 'Genève', 'Graz', 'Helsinki', 'I. de Margarita', 'Kirkland', 'Kobenhavn', 'Köln', 'Lander'];
 
-var server_url = 'http://localhost:5000/api/v1';
+
+const server_url = 'http://localhost:5000/api/v1';
+
+function get_regions() {
+    console.log("Calling regions ....")
+    fetch(server_url + '/shipregions')
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            regions = data;
+        })
+};
+
 
 var config = {
     layout: {
@@ -227,6 +240,8 @@ var config = {
                 console.log("--- onClick: " + target);
                 if (target === 'cancel') {
                     w2ui.orders.reload();
+                } else if (target === 'w2ui-search-advanced') {
+                    w2ui.orders.searches[5].options.items = regions
                 } else if (target === 'excel') {
 
                 }
@@ -299,6 +314,8 @@ var config = {
 };
 
 $(function () {
+
+    get_regions()
 
     // initialization
     // w2utils.settings.dataType = 'HTTP';
