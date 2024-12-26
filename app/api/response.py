@@ -1,6 +1,8 @@
 """Grid response."""
 import json
 
+from .utils import IN_DATE_FORMAT, date_format
+
 num_to_bool = {"1": True, "0": False}
 
 
@@ -33,13 +35,6 @@ def product_response(data, count):
     return json.dumps(response)
 
 
-def date_format(date_in, format):
-    """Format the input date with passed format."""
-    if date_in:
-        return date_in.strftime(format)
-    return ""
-
-
 def order_response(data, count):
     """Create the order response."""
     response = {}
@@ -55,9 +50,9 @@ def order_response(data, count):
         record["customerId"] = d.customer_id
         record["employeeName"] = d.employee_name
         record["freight"] = d.freight
-        record["orderDate"] = date_format(d.order_date, "%Y-%m-%d")
-        record["requiredDate"] = date_format(d.required_date, "%Y-%m-%d")
-        record["shippedDate"] = date_format(d.shipped_date, "%Y-%m-%d")
+        record["orderDate"] = date_format(d.order_date, IN_DATE_FORMAT)
+        record["requiredDate"] = date_format(d.required_date, IN_DATE_FORMAT)
+        record["shippedDate"] = date_format(d.shipped_date, IN_DATE_FORMAT)
         record["shippedAddress"] = d.ship_address
         record["shipCity"] = d.ship_city
         record["shipCountry"] = d.ship_country

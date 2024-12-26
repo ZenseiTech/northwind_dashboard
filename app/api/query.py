@@ -1,6 +1,10 @@
 """Filter queries."""
 
+import datetime
 import re
+
+IN_DATE_FORMAT = "%m/%d/%Y"
+OUT_DATE_FORMAT = "%Y-%m-%d"
 
 operators_map = {
     "text": "text",
@@ -48,6 +52,11 @@ def create_dinamic_sort(request_data, object):
     return None, asc
 
 
+def date_format(in_date, in_date_format, out_date_format):
+    """Format date from in format to output format."""
+    return datetime.datetime.strptime(in_date, in_date_format).strftime(out_date_format)
+
+
 def create_dinamic_filters(request_data, object):
     """Create search filter dynamically."""
     filters = []
@@ -75,9 +84,13 @@ def create_dinamic_filters(request_data, object):
                 filters.append(attr == search.value)
         elif type == "date":
             if search.operator == "between":
-                filters.append(attr.between(search.value[0], search.value[1]))
+                date1 = date_format(search.value[0], IN_DATE_FORMAT, OUT_DATE_FORMAT)
+                date2 = date_format(search.value[1], IN_DATE_FORMAT, OUT_DATE_FORMAT)
+                filters.append(attr.between(date1, date2))
             else:
-                filters.append(attr.between(search.value))
+                filters.append(
+                    attr == date_format(search.value, IN_DATE_FORMAT, OUT_DATE_FORMAT)
+                )
         elif type == "text":
             if search.operator == "begins":
                 filters.append(attr.like(search.value + "%"))

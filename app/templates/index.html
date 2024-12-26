@@ -23,6 +23,15 @@
 
     const server_url = 'http://localhost:5000/api/v1';
 
+    function hide_search_save(document) {
+        // There is a bug in the framework
+        // Hide the save search button
+        let saveSearchElement = document.getElementsByClassName('w2ui-btn grid-search-btn')
+        if (saveSearchElement.length !== 0) {
+            saveSearchElement[0].style.display = 'none';
+        }
+    }
+
     function get_regions() {
         console.log("Calling regions ....")
         fetch(server_url + '/shipregions')
@@ -258,6 +267,7 @@
             },
             multiSearch: true,
             searches: [
+                { field: 'customerId', label: 'Customer Id', type: 'int' },
                 { field: 'freight', label: 'Freight', type: 'money' },
                 { field: 'shipCountry', label: 'Ship Country', type: 'list', options: { items: countries } },
                 { field: 'shipRegion', label: 'Ship Region', type: 'list', options: { items: regions } },
@@ -302,7 +312,7 @@
 
             },
             onDblClick: function (event) {
-                console.log('Column is: ' + event.column + ' and recid is: ' + event.recid);
+                console.log('Column is: ' + event.detail.column + ' and recid is: ' + event.detail.recid);
                 if (event.column === 0) {
 
                 }
@@ -311,13 +321,14 @@
 
             },
             onClick(event) {
-                console.log("On click...: " + event.recid);
+                console.log("On click...: " + event.detail.recid);
             },
             onLoad: function (event) {
                 console.log("Loading ...");
                 orders.searches[2].options.items = regions
                 event.onComplete = function () {
                     console.log("onComplete orders Loading ...");
+                    hide_search_save(document)
                 }
             }
         },
