@@ -67,12 +67,37 @@ def order_response(data, count):
     return json.dumps(response)
 
 
+def order_details_response(data):
+    """Create the order details response."""
+    response = {}
+    response["status"] = "success"
+    response["total"] = len(data)
+
+    records = []
+
+    for d in data:
+        record = {}
+        record["recid"] = d.id
+        record["product_name"] = d.product_name
+        record["unit_price"] = d.unit_price
+        record["quantity"] = d.quantity
+        record["discount"] = d.discount
+
+        records.append(record)
+
+    response["records"] = records
+
+    return json.dumps(response)
+
+
 def grid_response(object_type, data, count):
     """Generate response depending on object_type."""
     if object_type == "Product":
         return product_response(data, count)
     elif object_type == "Order":
         return order_response(data, count)
+    elif object_type == "OrderDetails":
+        return order_details_response(data)
     else:
         response = {}
         response["status"] = "error"

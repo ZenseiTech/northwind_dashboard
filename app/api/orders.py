@@ -5,7 +5,7 @@ from app.api import response
 from app.api.query import create_dinamic_filters, create_dinamic_sort
 from app.api.request import build_request
 
-from ..models import OrderView, ShipRegions
+from ..models import OrderDetailsView, OrderView, ShipRegions
 from . import api
 
 
@@ -20,15 +20,15 @@ def ship_regions():
 
 
 @api.route(
-    "/orderdetails",
+    "/orders",
     methods=(
         "GET",
         "POST",
     ),
 )
-def order_details():
-    """Order Details API."""
-    print("===> Inside order details....")
+def orders():
+    """Order API."""
+    print("===> Inside orders ...")
 
     query = OrderView.query
 
@@ -56,3 +56,23 @@ def order_details():
     orders = query.all()
 
     return response.grid_response("Order", orders, count)
+
+
+@api.route(
+    "/orderdetails/<int:order_id>",
+    methods=(
+        "GET",
+        "POST",
+    ),
+)
+def order_details(order_id):
+    """Order Details API."""
+    print("===> Inside order details....")
+
+    query = OrderDetailsView.query
+    query = query.filter(OrderDetailsView.order_id == order_id)
+
+    # calling the query ...
+    order_details = query.all()
+
+    return response.grid_response("OrderDetails", order_details, 500)

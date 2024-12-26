@@ -5,11 +5,9 @@ from . import api
 
 @api.route("/categories", methods=("GET", "POST"))
 def categories():
-    """Categories API."""
-    categories = Category.query.all()
-    # categories = Category.query.filter_by(categoryName='Produce').all()
-    # categories = Category.query.limit(2).all()
-    # Category.query.limit
-    for category in categories:
-        print(f"Name: {category}")
-    return {"status": "Ok"}
+    """Retreive categories from api."""
+    data = Category.query.all()
+    categories = []
+    for d in data:
+        categories.append(d.category_name)
+    return categories

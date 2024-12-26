@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>{% block title %}NorthWind UI{% endblock %}</h1>
-<div id="main" style="width: 100%; height: 630px;"></div>
+<div id="main" style="width: 100%; height: 1390px;"></div>
 <link rel="stylesheet" type="text/css" href="https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
 <link rel="stylesheet" type="text/css" href="../static/styles/w2ui-overrides.css" />
 
@@ -17,6 +17,8 @@
     var countries = ['USA', 'Canada', 'France', 'Ireland', 'Belgium', 'Venezuela', 'Norway', 'UK', 'Spain', 'Switzerland', 'Argentina', 'Portugal', 'Austria', 'Germany', 'Brazil', 'Mexico', 'Finland', 'Italy', 'Denmark', 'Poland', 'Sweden'];
 
     var regions = []
+
+    var categories = []
 
     var cities = ['Aachen', 'Albuquerque', 'Anchorage', 'Barcelona', 'Barquisimeto', 'Bergamo', 'Berlin', 'Bern', 'Boise', 'Brandenburg', 'Bruxelles', 'Bräcke', 'Buenos Aires', 'Butte', 'Campinas', 'Caracas', 'Charleroi', 'Colchester', 'Cork', 'Cowes', 'Cunewalde', 'Elgin', 'Eugene', 'Frankfurt a.M.', 'Genève', 'Graz', 'Helsinki', 'I. de Margarita', 'Kirkland', 'Kobenhavn', 'Köln', 'Lander'];
 
@@ -44,13 +46,32 @@
     };
 
 
+    function get_categories() {
+        console.log("Calling categories ....")
+        fetch(server_url + '/categories')
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                categories = data;
+            })
+    };
+
+
     let config = {
         layout: {
             name: 'layout',
             padding: 0,
             panels: [
                 { type: 'left', size: 150, resizable: true, style: pstyle, minSize: 50 },
-                { type: 'main', minSize: 550, style: pstyle, overflow: 'hidden' }
+            ]
+        },
+        layout2: {
+            name: 'layout2',
+            padding: 0,
+            panels: [
+                { type: 'top', minSize: 650, resizable: true, style: pstyle, overflow: 'hidden' },
+                { type: 'bottom', minSize: 350, resizable: true, style: pstyle, overflow: 'hidden' }
             ]
         },
         sidebar: {
@@ -71,13 +92,13 @@
             onClick: function (event) {
                 switch (event.target) {
                     case 'customers_grid':
-                        layout.html('main', customers)
+                        layout2.html('top', customers)
                         break;
                     case 'orders_grid':
-                        layout.html('main', orders)
+                        layout2.html('top', orders)
                         break;
                     case 'product_details_grid':
-                        layout.html('main', product_details)
+                        layout2.html('top', product_details)
                         break;
                 }
             }
@@ -193,6 +214,7 @@
                 { field: 'unitsOnOrder', label: 'Units In Order', type: 'int' },
                 { field: 'reorderLevel', label: 'Reorder Level', type: 'int' },
                 { field: 'discontinued', label: 'Discontinued', type: 'list', options: { items: ['Y', 'N'] } },
+                { field: 'categoryName', label: 'Category Name', type: 'list', options: { items: categories } },
             ],
             // reorderColumns: true,
             columns: [
@@ -234,11 +256,18 @@
             },
             onKeydown: function (event) {
 
-            }
+            },
+            onLoad: function (event) {
+                console.log("Loading products ...");
+                product_details.searches[5].options.items = categories
+                event.onComplete = function () {
+                    hide_search_save(document)
+                }
+            },
         },
         orders: {
             name: 'orders',
-            url: server_url + '/orderdetails',
+            url: server_url + '/orders',
             header: 'Orders',
             // style: grid_style,
             limit: 500,
@@ -267,7 +296,7 @@
             },
             multiSearch: true,
             searches: [
-                { field: 'customerId', label: 'Customer Id', type: 'int' },
+                // { field: 'customerId', label: 'Customer Id', type: 'int' },
                 { field: 'freight', label: 'Freight', type: 'money' },
                 { field: 'shipCountry', label: 'Ship Country', type: 'list', options: { items: countries } },
                 { field: 'shipRegion', label: 'Ship Region', type: 'list', options: { items: regions } },
@@ -277,7 +306,7 @@
                 { field: 'shippedDate', label: 'Shipped Date', type: 'date' },
             ],
             columns: [
-                { field: 'customerId', text: 'Customer Id', size: '80px', searchable: true, sortable: true, frozen: true },
+                // { field: 'customerId', text: 'Customer Id', size: '80px', searchable: true, sortable: true, frozen: true },
                 { field: 'customerName', text: 'Customer Name', size: '160px', searchable: true, sortable: true, info: true, frozen: true },
                 { field: 'employeeName', text: 'Employee Name', size: '160px', searchable: true, sortable: true },
                 { field: 'freight', text: 'Freight', size: '110px', searchable: true, sortable: true, render: 'money' },
@@ -313,15 +342,13 @@
             },
             onDblClick: function (event) {
                 console.log('Column is: ' + event.detail.column + ' and recid is: ' + event.detail.recid);
-                if (event.column === 0) {
-
-                }
             },
             onKeydown: function (event) {
 
             },
             onClick(event) {
                 console.log("On click...: " + event.detail.recid);
+                layout2.toggle('main', window.instant)
             },
             onLoad: function (event) {
                 console.log("Loading ...");
@@ -335,16 +362,22 @@
     };
 
     let layout = new w2layout(config.layout)
+    let layout2 = new w2layout(config.layout2)
+
     let sidebar = new w2sidebar(config.sidebar)
     let customers = new w2grid(config.customers)
     let product_details = new w2grid(config.product_details)
     let orders = new w2grid(config.orders)
+
     // initialization
     layout.render('#main')
     layout.html('left', sidebar)
-    layout.html('main', product_details)
+    layout.html('main', layout2)
+    layout2.html('top', product_details)
+    layout2.html('main', orders)
 
     get_regions()
+    get_categories()
 
 </script>
 {% endblock %}

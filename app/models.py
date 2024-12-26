@@ -514,6 +514,24 @@ class Order(db.Model):
         return f"<Orders order.id = {self.id} customer_id: {self.customer_id}>"
 
 
+class OrderDetailsView(db.Model):
+    """OrderDetailsView model."""
+
+    __tablename__ = "order_details_view"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    order_id = db.Column(db.Integer, nullable=False)
+    product_id = db.Column(db.Integer, nullable=False)
+    product_name = db.Column(db.String(64), nullable=False)
+    unit_price = db.Column("unit_price", db.Float)
+    quantity = db.Column("quantity", db.Integer)
+    discount = db.Column("discount", db.Float)
+
+    def __repr__(self):
+        """Representation."""
+        return f"<OrderDetailsView order_details_view.id = {self.id} order_id: {self.product_id}>"
+
+
 order_details = db.Table(
     "order_details",
     db.Column("order_id", db.Integer, db.ForeignKey("orders.id")),
