@@ -61,10 +61,9 @@ def order_response(data, count):
         record["shippedAddress"] = d.ship_address
         record["shipCity"] = d.ship_city
         record["shipCountry"] = d.ship_country
-        record["shipName"] = d.ship_name
         record["shipPostalCode"] = d.ship_postal_code
         record["shipRegion"] = d.ship_region
-        record["shipperCompanyName"] = d.ship_name
+        record["shipperName"] = d.shipper_name
 
         records.append(record)
 

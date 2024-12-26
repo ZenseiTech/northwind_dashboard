@@ -457,7 +457,6 @@ class OrderView(db.Model):
     required_date = db.Column(db.DateTime(), nullable=False)
     shipped_date = db.Column(db.DateTime(), nullable=True)
     freight = db.Column(db.Integer, default=0)
-    ship_name = db.Column(db.String(64), nullable=False)
     ship_address = db.Column(db.String(64), nullable=False)
     ship_city = db.Column(db.String(64), nullable=False)
     ship_region = db.Column(db.String(64), nullable=False)
@@ -466,7 +465,7 @@ class OrderView(db.Model):
 
     employee_name = db.Column(db.String(64), nullable=False)
     customer_name = db.Column(db.String(64), nullable=False)
-    ship_name = db.Column(db.String(64), nullable=False)
+    shipper_name = db.Column(db.String(64), nullable=False)
 
     customer_id = db.Column(db.Integer, db.ForeignKey("customers.id"))
     employee_id = db.Column(db.Integer, db.ForeignKey("employees.id"))

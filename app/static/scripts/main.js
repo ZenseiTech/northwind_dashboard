@@ -243,7 +243,7 @@ var config = {
             { field: 'shipCity', caption: 'Ship City', type: 'list', options: { items: cities } },
         ],
         columns: [
-            { field: 'customerId', caption: 'Customer Id', size: '140px', searchable: true, sortable: true, frozen: true },
+            { field: 'customerId', caption: 'Customer Id', size: '80px', searchable: true, sortable: true, frozen: true },
             { field: 'customerName', caption: 'Customer Name', size: '160px', searchable: true, sortable: true, info: true, frozen: true },
             { field: 'employeeName', caption: 'Employee Name', size: '160px', searchable: true, sortable: true },
             { field: 'freight', caption: 'Freight', size: '110px', searchable: true, sortable: true, render: 'money' },
@@ -253,10 +253,10 @@ var config = {
             { field: 'shippedAddress', caption: 'Shipped Address', size: '150px', searchable: true, sortable: true },
             { field: 'shipCity', caption: 'Ship City', size: '150px', searchable: true, sortable: true },
             { field: 'shipCountry', caption: 'Ship Country', size: '150px', searchable: true, sortable: true },
-            { field: 'shipName', caption: 'Ship Name', size: '150px', searchable: true, sortable: true },
+            { field: 'shipperName', caption: 'Shipper Name', size: '150px', searchable: true, sortable: true },
             { field: 'shipPostalCode', caption: 'Ship Postal Code', size: '150px', searchable: true, sortable: true },
             { field: 'shipRegion', caption: 'Ship Region', size: '150px', searchable: true, sortable: true },
-            { field: 'shipperCompanyName', caption: 'Shipper Name', size: '150px', searchable: true, sortable: true }
+            { field: 'shipperName', caption: 'Shipper Name', size: '150px', searchable: true, sortable: true }
         ],
         onAdd: function (event) {
 
@@ -285,6 +285,9 @@ var config = {
         },
         onKeydown: function (event) {
 
+        },
+        onClick(event) {
+            console.log("On click...: " + event.recid);
         },
         onLoad: function (event) {
             console.log("Loading ...");
