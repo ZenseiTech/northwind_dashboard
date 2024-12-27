@@ -78,8 +78,8 @@ def order_details_response(data):
     for d in data:
         record = {}
         record["recid"] = d.id
-        record["product_name"] = d.product_name
-        record["unit_price"] = d.unit_price
+        record["productName"] = d.product_name
+        record["unitPrice"] = d.unit_price
         record["quantity"] = d.quantity
         record["discount"] = d.discount
 

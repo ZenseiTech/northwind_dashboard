@@ -32,3 +32,12 @@
     position: relative;
     font-weight: bolder;
 }
+
+w2ui-grid .w2ui-grid-body .w2ui-grid-frecords table tr td.w2ui-inactive,
+.w2ui-grid .w2ui-grid-body .w2ui-grid-frecords table tr.w2ui-inactive,
+.w2ui-grid .w2ui-grid-body .w2ui-grid-records table tr td.w2ui-inactive,
+.w2ui-grid .w2ui-grid-body .w2ui-grid-records table tr.w2ui-inactive {
+    background-color: #c9d2e1 !important;
+    color: #160b77 !important;
+    font-weight: 900;
+}

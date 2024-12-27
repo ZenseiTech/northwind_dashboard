@@ -34,6 +34,7 @@
         }
     }
 
+
     function get_regions() {
         console.log("Calling regions ....")
         fetch(server_url + '/shipregions')
@@ -56,6 +57,22 @@
                 categories = data;
             })
     };
+
+    async function getOrderDetails(orderId) {
+        fetch(server_url + '/orderdetails/' + orderId)
+            .then((response) => {
+                return response.json();
+            }).then((data) => {
+                return data;
+            }).then((data) => {
+                console.log(data)
+                orderdetails.clear();
+                orderdetails.add(data.records)
+                if (layout_layout2_panel_main.style.opacity === '0') {
+                    layout2.toggle('main', window.instant)
+                }
+            })
+    }
 
 
     let config = {
@@ -352,9 +369,9 @@
             },
             onClick(event) {
                 console.log("On click...: " + event.detail.recid);
-                if (layout_layout2_panel_main.style.opacity === '0') {
-                    layout2.toggle('main', window.instant)
-                }
+                let recid = event.detail.recid
+                getOrderDetails(recid);
+
             },
             onLoad: function (event) {
                 console.log("Loading ...");
@@ -368,6 +385,24 @@
                 }
             }
         },
+        orderdetails: {
+            name: 'orderdetails',
+            // url: server_url + '/orderdetails/-1',
+            header: 'Order Details',
+            // style: grid_style,
+            limit: 500,
+            show: {
+                header: true,
+                footer: true,
+            },
+            columns: [
+                // { field: 'customerId', text: 'Customer Id', size: '80px', searchable: true, sortable: true, frozen: true },
+                { field: 'productName', text: 'Product Name', size: '180px', searchable: true, sortable: true, info: true, frozen: true },
+                { field: 'unitPrice', text: 'Unit Price', size: '160px', searchable: true, sortable: true, render: 'money' },
+                { field: 'quantity', text: 'Quantity', size: '110px', searchable: true, sortable: true, render: 'int' },
+                { field: 'discount', text: 'Discount', size: '120px', searchable: true, sortable: true, render: 'money' },
+            ],
+        },
     };
 
     let layout = new w2layout(config.layout)
@@ -377,13 +412,14 @@
     let customers = new w2grid(config.customers)
     let product_details = new w2grid(config.product_details)
     let orders = new w2grid(config.orders)
+    let orderdetails = new w2grid(config.orderdetails)
 
     // initialization
     layout.render('#main')
     layout.html('left', sidebar)
     layout.html('main', layout2)
     layout2.html('top', product_details)
-    layout2.html('main', orders)
+    layout2.html('main', orderdetails)
 
     get_regions()
     get_categories()
