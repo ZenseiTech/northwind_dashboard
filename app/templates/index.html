@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>{% block title %}NorthWind UI{% endblock %}</h1>
-<div id="main" style="width: 100%; height: 1390px;"></div>
+<div id="main" style="width: 100%; height: 1180px;"></div>
 <link rel="stylesheet" type="text/css" href="https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
 <link rel="stylesheet" type="text/css" href="../static/styles/w2ui-overrides.css" />
 
@@ -71,7 +71,7 @@
             padding: 0,
             panels: [
                 { type: 'top', minSize: 650, resizable: true, style: pstyle, overflow: 'hidden' },
-                { type: 'bottom', minSize: 350, resizable: true, style: pstyle, overflow: 'hidden' }
+                { type: 'bottom', minSize: 120, resizable: true, style: pstyle, overflow: 'hidden' }
             ]
         },
         sidebar: {
@@ -260,7 +260,11 @@
             onLoad: function (event) {
                 console.log("Loading products ...");
                 product_details.searches[5].options.items = categories
+
                 event.onComplete = function () {
+                    if (layout_layout2_panel_main.style.opacity === '1' || layout_layout2_panel_main.style.opacity === '') {
+                        layout2.toggle('main', window.instant)
+                    }
                     hide_search_save(document)
                 }
             },
@@ -348,13 +352,18 @@
             },
             onClick(event) {
                 console.log("On click...: " + event.detail.recid);
-                layout2.toggle('main', window.instant)
+                if (layout_layout2_panel_main.style.opacity === '0') {
+                    layout2.toggle('main', window.instant)
+                }
             },
             onLoad: function (event) {
                 console.log("Loading ...");
                 orders.searches[2].options.items = regions
                 event.onComplete = function () {
                     console.log("onComplete orders Loading ...");
+                    if (layout_layout2_panel_main.style.opacity === '1' || layout_layout2_panel_main.style.opacity === '') {
+                        layout2.toggle('main', window.instant)
+                    }
                     hide_search_save(document)
                 }
             }
