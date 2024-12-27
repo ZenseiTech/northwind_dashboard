@@ -4,7 +4,8 @@
     height: 28px;
     overflow: hidden;
     color: #101007;
-    font-size: 13px;
+    font-size: 16px;
+    font-weight: 900;
     text-align: center;
     padding: 7px;
     background-image: -webkit-linear-gradient(#dae6f3, #c2d5ed);
@@ -66,4 +67,14 @@ w2ui-grid .w2ui-grid-body .w2ui-grid-frecords table tr td.w2ui-inactive,
     background-color: #bdc6cf !important;
     border-bottom: 1px solid transparent;
     font-weight: 900;
+}
+
+.w2ui-grid .w2ui-grid-body table .w2ui-head>div {
+    padding: 7px 6px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    position: relative;
+    font-weight: 900;
+    color: #254f88;
 }
