@@ -63,8 +63,8 @@ w2ui-grid .w2ui-grid-body .w2ui-grid-frecords table tr td.w2ui-inactive,
 .w2ui-grid .w2ui-grid-body .w2ui-grid-frecords table tr.w2ui-selected,
 .w2ui-grid .w2ui-grid-body .w2ui-grid-records table tr td.w2ui-selected,
 .w2ui-grid .w2ui-grid-body .w2ui-grid-frecords table tr td.w2ui-selected {
-    color: black !important;
-    background-color: #bdc6cf !important;
+    color: rgb(231, 231, 221) !important;
+    background-color: #75828f !important;
     border-bottom: 1px solid transparent;
     font-weight: 900;
 }
@@ -75,6 +75,6 @@ w2ui-grid .w2ui-grid-body .w2ui-grid-frecords table tr td.w2ui-inactive,
     text-overflow: ellipsis;
     overflow: hidden;
     position: relative;
-    font-weight: 900;
+    font-size: 14;
     color: #254f88;
 }
