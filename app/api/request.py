@@ -80,9 +80,6 @@ def create_grid_data(data):
             )
             search.append(s)
 
-    # if "selected" in data and data['selected']:
-    #     print(f"selected: {data['selected']}")
-
     return GetRequest(
         limit=data["limit"],
         offset=data["offset"],

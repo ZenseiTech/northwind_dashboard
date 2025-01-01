@@ -78,3 +78,11 @@ w2ui-grid .w2ui-grid-body .w2ui-grid-frecords table tr td.w2ui-inactive,
     font-size: 14;
     color: #254f88;
 }
+
+
+.w2ui-sidebar .w2ui-sidebar-body .w2ui-selected,
+.w2ui-sidebar .w2ui-sidebar-body .w2ui-selected:hover {
+    background-color: #b2b6cb;
+    position: relative;
+    border: 1px solid #dee1ff;
+}

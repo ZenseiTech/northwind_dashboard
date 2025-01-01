@@ -2,6 +2,9 @@
 IN_DATE_FORMAT = "%m/%d/%Y"
 
 
+num_to_bool = {"1": True, "0": False}
+
+
 def date_format(date_in, format):
     """Format the input date with passed format."""
     if date_in:

@@ -1,4 +1,6 @@
 """Product module."""
+import json
+
 from flask import request
 
 from app.api import response
@@ -7,6 +9,7 @@ from app.api.request import build_request
 
 from ..models import ProductView
 from . import api
+from .utils import num_to_bool
 
 
 @api.route("/products", methods=("GET", "POST"))
@@ -58,3 +61,45 @@ def product_details():
     products = query.all()
 
     return response.grid_response("Product", products, count)
+
+
+@api.route(
+    "/product",
+    methods=(
+        "GET",
+        "POST",
+    ),
+)
+def product():
+    """Product API."""
+    print("===> Inside product....")
+
+    request_data = json.loads(request.values["request"])
+
+    record = {}
+
+    if request_data["action"] == "get":
+        query = ProductView.query
+        query = query.filter(ProductView.id == request_data["recid"])
+
+        # calling the query ...
+        d = query.one()
+
+        record["recid"] = d.id
+        record["productName"] = d.product_name
+        record["quantityPerUnit"] = d.quantity_per_unit
+        record["unitPrice"] = d.unit_price
+        record["unitsInStock"] = d.units_in_stock
+        record["unitsOnOrder"] = d.units_on_order
+        record["reorderLevel"] = d.reorder_level
+        record["discontinued"] = num_to_bool[d.discontinued]
+        record["categoryName"] = d.category_name
+        record["supplierName"] = d.supplier_name
+        record["supplierRegion"] = d.supplier_region
+
+    elif request_data["action"] == "save":
+        print("Saving to DB")
+        record = {}
+        record["success"] = True
+
+    return json.dumps(record)

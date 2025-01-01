@@ -1,9 +1,7 @@
 """Grid response."""
 import json
 
-from .utils import IN_DATE_FORMAT, date_format
-
-num_to_bool = {"1": True, "0": False}
+from .utils import IN_DATE_FORMAT, date_format, num_to_bool
 
 
 def product_response(data, count):

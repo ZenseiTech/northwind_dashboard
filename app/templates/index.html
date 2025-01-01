@@ -8,7 +8,7 @@
 
 <script type="module">
 
-    import { w2layout, w2sidebar, w2grid, query } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
+    import { w2layout, w2sidebar, w2grid, query, w2form, w2popup } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
 
     var pstyle = 'border: 1px solid #dfdfdf; padding: 5px; font-size:11px;';
     var pstyle2 = 'border: 1px solid #dfdfdf; padding: 5px;  text-align: center;';
@@ -44,7 +44,7 @@
     }
 
 
-    function get_regions() {
+    function getRegions() {
         console.log("Calling regions ....")
         fetch(server_url + '/shipregions')
             .then((response) => {
@@ -56,7 +56,7 @@
     };
 
 
-    function get_categories() {
+    function getCategories() {
         console.log("Calling categories ....")
         fetch(server_url + '/categories')
             .then((response) => {
@@ -100,6 +100,13 @@
                 { type: 'bottom', minSize: 120, resizable: true, style: pstyle, overflow: 'hidden' }
             ]
         },
+        layoutProduct: {
+            name: 'layoutProduct',
+            padding: 0,
+            panels: [
+                { type: 'main', size: 150, resizable: true, style: pstyle, minSize: 50 },
+            ]
+        },
         sidebar: {
             name: 'sidebar',
             flatButton: false,
@@ -139,7 +146,7 @@
                 header: true,
                 toolbar: true,
                 footer: true,
-                toolbarSave: true,
+                // toolbarSave: true,
                 toolbarAdd: true
             },
             toolbar: {
@@ -244,16 +251,16 @@
             ],
             // reorderColumns: true,
             columns: [
-                { field: 'productName', text: 'Product Name', size: '170px', searchable: true, sortable: true, info: true, frozen: true, editable: { type: 'text' } },
-                { field: 'quantityPerUnit', text: 'Qty Per Unit', size: '140px', searchable: true, sortable: true, editable: { type: 'text' } },
-                { field: 'unitPrice', text: 'Unit Price', size: '160px', searchable: true, sortable: true, render: 'money', editable: { type: 'money' } },
-                { field: 'unitsInStock', text: 'Units In Stock', size: '110px', searchable: true, sortable: true, render: 'int', editable: { type: 'int' } },
-                { field: 'unitsOnOrder', text: 'Units On Order', size: '120px', searchable: true, sortable: true, render: 'int', editable: { type: 'int' } },
-                { field: 'reorderLevel', text: 'Reorder Level', size: '130px', searchable: true, sortable: true, render: 'int', editable: { type: 'int' } },
-                { field: 'discontinued', text: 'Discontinued', size: '150px', searchable: true, sortable: true, editable: { type: 'checkbox', style: 'text-align: center' } },
-                { field: 'categoryName', text: 'Category Name', size: '150px', searchable: true, sortable: true, editable: { type: 'text' } },
-                { field: 'supplierName', text: 'Supplier Name', size: '150px', searchable: true, sortable: true, editable: { type: 'text' } },
-                { field: 'supplierRegion', text: 'Supplier Region', size: '150px', searchable: true, sortable: true, editable: { type: 'text' } }
+                { field: 'productName', text: 'Product Name', size: '170px', searchable: true, sortable: true, info: true, frozen: true },
+                { field: 'quantityPerUnit', text: 'Qty Per Unit', size: '140px', searchable: true, sortable: true },
+                { field: 'unitPrice', text: 'Unit Price', size: '160px', searchable: true, sortable: true, render: 'money' },
+                { field: 'unitsInStock', text: 'Units In Stock', size: '110px', searchable: true, sortable: true, render: 'int' },
+                { field: 'unitsOnOrder', text: 'Units On Order', size: '120px', searchable: true, sortable: true, render: 'int' },
+                { field: 'reorderLevel', text: 'Reorder Level', size: '130px', searchable: true, sortable: true, render: 'int' },
+                { field: 'discontinued', text: 'Discontinued', size: '150px', searchable: true, sortable: true },
+                { field: 'categoryName', text: 'Category Name', size: '150px', searchable: true, sortable: true },
+                { field: 'supplierName', text: 'Supplier Name', size: '150px', searchable: true, sortable: true },
+                { field: 'supplierRegion', text: 'Supplier Region', size: '150px', searchable: true, sortable: true }
             ],
             onAdd: function (event) {
 
@@ -275,10 +282,8 @@
 
             },
             onDblClick: function (event) {
-                console.log('Column is: ' + event.column + ' and recid is: ' + event.recid);
-                if (event.column === 0) {
-
-                }
+                console.log('Column is: ' + event.detail.column + ' and recid is: ' + event.detail.recid);
+                openPopup();
             },
             onKeydown: function (event) {
 
@@ -432,6 +437,31 @@
                 }
             },
         },
+        productForm: {
+            header: 'Edit Product',
+            name: 'prooductForm',
+            style: 'border: 1px solid #efefef',
+            fields: [
+                { field: 'recid', type: 'text', html: { label: 'ID', attr: 'size="10" readonly' } },
+                { field: 'productName', type: 'text', required: true, html: { label: 'Product Name', attr: 'size="40" maxlength="64"' } },
+                { field: 'quantityPerUnit', type: 'text', required: true, html: { label: 'Qty Per Unit', attr: 'size="40" maxlength="64"' } },
+                { field: 'unitsInStock', type: 'int', html: { label: 'Units In Stock' } },
+                { field: 'unitsOnOrder', type: 'int', html: { label: 'Units On Order' } },
+                {
+                    field: 'discontinued', type: 'toggle', html: { label: 'Discontinued' }
+                },
+            ],
+            actions: {
+                reset() {
+                    formProduct.reload();
+                },
+                save() {
+                    let errors = this.validate()
+                    if (errors.length > 0) return
+                    formProduct.save();
+                }
+            }
+        },
     };
 
     let layout = new w2layout(config.layout)
@@ -442,6 +472,7 @@
     let product_details = new w2grid(config.product_details)
     let orders = new w2grid(config.orders)
     let orderdetails = new w2grid(config.orderdetails)
+    let formProduct = new w2form(config.productForm)
 
     // initialization
     layout.render('#main')
@@ -450,8 +481,29 @@
     layout2.html('top', product_details)
     layout2.html('main', orderdetails)
 
-    get_regions()
-    get_categories()
+
+    let layoutProduct = new w2layout(config.layoutProduct)
+
+    window.openPopup = function () {
+        formProduct.recid = product_details.getSelection()[0];
+        formProduct.url = server_url + "/product"
+
+        w2popup.open({
+            title: 'Popup',
+            width: 900,
+            height: 600,
+            showMax: true,
+            body: '<div id="main" style="position: absolute; left: 2px; right: 2px; top: 0px; bottom: 3px;"></div>'
+        })
+            .then(e => {
+                layoutProduct.render('#w2ui-popup #main')
+                layoutProduct.html('main', formProduct)
+            })
+        formProduct.reload();
+    }
+
+    getRegions()
+    getCategories()
 
 </script>
 {% endblock %}
