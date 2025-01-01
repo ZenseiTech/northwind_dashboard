@@ -25,7 +25,16 @@
 
     const server_url = 'http://localhost:5000/api/v1';
 
-    function hide_search_save(document) {
+    function getOrderRecord(recid) {
+        for (let i = 0; i < orders.records.length; ++i) {
+            if (orders.records[i].recid === recid) {
+                return orders.records[i]
+            }
+        }
+        return [];
+    }
+
+    function hideSearchSave(document) {
         // There is a bug in the framework
         // Hide the save search button
         let saveSearchElement = document.getElementsByClassName('w2ui-btn grid-search-btn')
@@ -282,7 +291,7 @@
                     if (layout_layout2_panel_main.style.opacity === '1' || layout_layout2_panel_main.style.opacity === '') {
                         layout2.toggle('main', window.instant)
                     }
-                    hide_search_save(document)
+                    hideSearchSave(document)
                 }
             },
         },
@@ -302,7 +311,7 @@
             toolbar: {
                 items: [
                     { type: 'break' },
-                    { type: 'button', id: 'cancel', text: 'Cancel', icon: 'w2ui-icon-cross' },
+                    // { type: 'button', id: 'cancel', text: 'Cancel', icon: 'w2ui-icon-cross' },
                     { type: 'spacer' },
                     { type: 'button', id: 'excel', text: 'Excel', icon: 'w2ui-icon-plus' },
                 ],
@@ -334,7 +343,7 @@
                 { field: 'orderDate', text: 'Order Date', size: '120px', searchable: true, sortable: true },
                 { field: 'requiredDate', text: 'Required Date', size: '130px', searchable: true, sortable: true },
                 { field: 'shippedDate', text: 'Ship Date', size: '150px', searchable: true, sortable: true },
-                { field: 'shippedAddress', text: 'Shipped Address', size: '150px', searchable: true, sortable: true },
+                { field: 'shipAddress', text: 'Shipped Address', size: '150px', searchable: true, sortable: true },
                 { field: 'shipCity', text: 'Ship City', size: '150px', searchable: true, sortable: true },
                 { field: 'shipCountry', text: 'Ship Country', size: '150px', searchable: true, sortable: true },
                 { field: 'shipperName', text: 'Shipper Name', size: '150px', searchable: true, sortable: true },
@@ -368,10 +377,12 @@
 
             },
             onClick(event) {
-                console.log("On click...: " + event.detail.recid);
-                let recid = event.detail.recid
-                getOrderDetails(recid);
-
+                event.onComplete = function () {
+                    const record = orders.records[this.getSelection(true)]
+                    console.log("Order status ... " + record.orderStatus)
+                    let recid = event.detail.recid
+                    getOrderDetails(recid);
+                }
             },
             onLoad: function (event) {
                 console.log("Loading ...");
@@ -381,7 +392,7 @@
                     if (layout_layout2_panel_main.style.opacity === '1' || layout_layout2_panel_main.style.opacity === '') {
                         layout2.toggle('main', window.instant)
                     }
-                    hide_search_save(document)
+                    hideSearchSave(document)
                 }
             }
         },
@@ -392,16 +403,34 @@
             // style: grid_style,
             limit: 500,
             show: {
+                toolbar: true,
+                toolbarSave: true,
                 header: true,
                 footer: true,
             },
             columns: [
                 // { field: 'customerId', text: 'Customer Id', size: '80px', searchable: true, sortable: true, frozen: true },
                 { field: 'productName', text: 'Product Name', size: '180px', searchable: true, sortable: true, info: true, frozen: true },
-                { field: 'unitPrice', text: 'Unit Price', size: '160px', searchable: true, sortable: true, render: 'money' },
-                { field: 'quantity', text: 'Quantity', size: '110px', searchable: true, sortable: true, render: 'int' },
-                { field: 'discount', text: 'Discount', size: '120px', searchable: true, sortable: true, render: 'money' },
+                { field: 'unitPrice', text: 'Unit Price', size: '160px', searchable: true, sortable: true, render: 'money', editable: { type: 'money' } },
+                { field: 'quantity', text: 'Quantity', size: '110px', searchable: true, sortable: true, render: 'int', editable: { type: 'int' } },
+                { field: 'discount', text: 'Discount', size: '120px', searchable: true, sortable: true, render: 'money', editable: { type: 'money' } },
             ],
+            onSave: function (event) {
+                console.log("OrderDetails onSave... " + event.detail.changes);
+            },
+            onDblClick: function (event) {
+                console.log("OrderDetails double click...: " + event.detail.recid);
+                let record = getOrderRecord(event.detail.recid);
+                if (typeof record.shippedDate !== 'undefined') {
+                    event.preventDefault();
+                }
+
+                event.onComplete = function () {
+                    const record = orders.records[this.getSelection(true)]
+                    console.log("Order status ... " + record.orderStatus)
+                    let recid = event.detail.recid
+                }
+            },
         },
     };
 

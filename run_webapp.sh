@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ "$VIRTUAL_ENV" = "" ]; then
+    source ./.venv/bin/activate
+fi
+
 export FLASK_APP=northwind.py
 
 export FLASK_DEBUG=1

@@ -53,7 +53,7 @@ def order_response(data, count):
         record["orderDate"] = date_format(d.order_date, IN_DATE_FORMAT)
         record["requiredDate"] = date_format(d.required_date, IN_DATE_FORMAT)
         record["shippedDate"] = date_format(d.shipped_date, IN_DATE_FORMAT)
-        record["shippedAddress"] = d.ship_address
+        record["shipAddress"] = d.ship_address
         record["shipCity"] = d.ship_city
         record["shipCountry"] = d.ship_country
         record["shipPostalCode"] = d.ship_postal_code
