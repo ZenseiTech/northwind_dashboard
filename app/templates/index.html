@@ -10,17 +10,19 @@
 
     import { w2layout, w2sidebar, w2grid, query, w2form, w2popup } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
 
-    var pstyle = 'border: 1px solid #dfdfdf; padding: 5px; font-size:11px;';
-    var pstyle2 = 'border: 1px solid #dfdfdf; padding: 5px;  text-align: center;';
-    var grid_style = 'font-size:16px;color:black';
+    let pstyle = 'border: 1px solid #dfdfdf; padding: 5px; font-size:11px;';
+    let pstyle2 = 'border: 1px solid #dfdfdf; padding: 30px;  text-align: center;';
+    let grid_style = 'font-size:16px;color:black';
 
-    var countries = ['USA', 'Canada', 'France', 'Ireland', 'Belgium', 'Venezuela', 'Norway', 'UK', 'Spain', 'Switzerland', 'Argentina', 'Portugal', 'Austria', 'Germany', 'Brazil', 'Mexico', 'Finland', 'Italy', 'Denmark', 'Poland', 'Sweden'];
+    let countries = ['USA', 'Canada', 'France', 'Ireland', 'Belgium', 'Venezuela', 'Norway', 'UK', 'Spain', 'Switzerland', 'Argentina', 'Portugal', 'Austria', 'Germany', 'Brazil', 'Mexico', 'Finland', 'Italy', 'Denmark', 'Poland', 'Sweden'];
 
-    var regions = []
+    let regions = []
 
-    var categories = []
+    let categories = []
 
-    var cities = ['Aachen', 'Albuquerque', 'Anchorage', 'Barcelona', 'Barquisimeto', 'Bergamo', 'Berlin', 'Bern', 'Boise', 'Brandenburg', 'Bruxelles', 'Bräcke', 'Buenos Aires', 'Butte', 'Campinas', 'Caracas', 'Charleroi', 'Colchester', 'Cork', 'Cowes', 'Cunewalde', 'Elgin', 'Eugene', 'Frankfurt a.M.', 'Genève', 'Graz', 'Helsinki', 'I. de Margarita', 'Kirkland', 'Kobenhavn', 'Köln', 'Lander'];
+    let suppliers = []
+
+    let cities = ['Aachen', 'Albuquerque', 'Anchorage', 'Barcelona', 'Barquisimeto', 'Bergamo', 'Berlin', 'Bern', 'Boise', 'Brandenburg', 'Bruxelles', 'Bräcke', 'Buenos Aires', 'Butte', 'Campinas', 'Caracas', 'Charleroi', 'Colchester', 'Cork', 'Cowes', 'Cunewalde', 'Elgin', 'Eugene', 'Frankfurt a.M.', 'Genève', 'Graz', 'Helsinki', 'I. de Margarita', 'Kirkland', 'Kobenhavn', 'Köln', 'Lander'];
 
 
     const server_url = 'http://localhost:5000/api/v1';
@@ -94,7 +96,7 @@
         },
         layout2: {
             name: 'layout2',
-            padding: 0,
+            padding: 6,
             panels: [
                 { type: 'top', minSize: 650, resizable: true, style: pstyle, overflow: 'hidden' },
                 { type: 'bottom', minSize: 120, resizable: true, style: pstyle, overflow: 'hidden' }
@@ -283,7 +285,9 @@
             },
             onDblClick: function (event) {
                 console.log('Column is: ' + event.detail.column + ' and recid is: ' + event.detail.recid);
-                openPopup();
+                event.onComplete = function () {
+                    openPopup();
+                }
             },
             onKeydown: function (event) {
 
@@ -445,11 +449,28 @@
                 { field: 'recid', type: 'text', html: { label: 'ID', attr: 'size="10" readonly' } },
                 { field: 'productName', type: 'text', required: true, html: { label: 'Product Name', attr: 'size="40" maxlength="64"' } },
                 { field: 'quantityPerUnit', type: 'text', required: true, html: { label: 'Qty Per Unit', attr: 'size="40" maxlength="64"' } },
+                { field: 'unitPrice', type: 'money', html: { label: 'Unit Price' } },
                 { field: 'unitsInStock', type: 'int', html: { label: 'Units In Stock' } },
                 { field: 'unitsOnOrder', type: 'int', html: { label: 'Units On Order' } },
+                { field: 'reorderLevel', type: 'int', html: { label: 'Reorder Level' } },
                 {
                     field: 'discontinued', type: 'toggle', html: { label: 'Discontinued' }
                 },
+                {
+                    field: 'categoryName', type: 'list',
+                    html: { label: 'Category' },
+                    options: { items: categories }
+                },
+                {
+                    field: 'supplierName', type: 'list',
+                    html: { label: 'Supplier' },
+                    options: { items: suppliers }
+                },
+                {
+                    field: 'supplierRegion', type: 'list',
+                    html: { label: 'Supplier Region' },
+                    options: { items: regions }
+                }
             ],
             actions: {
                 reset() {
@@ -463,6 +484,9 @@
             }
         },
     };
+
+    getRegions()
+    getCategories()
 
     let layout = new w2layout(config.layout)
     let layout2 = new w2layout(config.layout2)
@@ -489,21 +513,21 @@
         formProduct.url = server_url + "/product"
 
         w2popup.open({
-            title: 'Popup',
-            width: 900,
-            height: 600,
+            // title: 'Popup',
+            width: 600,
+            height: 650,
             showMax: true,
             body: '<div id="main" style="position: absolute; left: 2px; right: 2px; top: 0px; bottom: 3px;"></div>'
         })
             .then(e => {
                 layoutProduct.render('#w2ui-popup #main')
+                formProduct.fields[8].options.items = categories
+                formProduct.fields[9].options.items = suppliers
+                formProduct.fields[10].options.items = regions
                 layoutProduct.html('main', formProduct)
             })
         formProduct.reload();
     }
-
-    getRegions()
-    getCategories()
 
 </script>
 {% endblock %}
