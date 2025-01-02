@@ -223,22 +223,22 @@
                 header: true,
                 toolbar: true,
                 footer: true,
-                toolbarSave: true,
+                // toolbarSave: true,
                 toolbarAdd: true
             },
             toolbar: {
                 items: [
                     { type: 'break' },
-                    { type: 'button', id: 'cancel', text: 'Cancel', icon: 'w2ui-icon-cross' },
+                    // { type: 'button', id: 'cancel', text: 'Cancel', icon: 'w2ui-icon-cross' },
                     { type: 'spacer' },
                     { type: 'button', id: 'excel', text: 'Excel', icon: 'w2ui-icon-plus' },
                 ],
                 onClick: function (target, data) {
-                    console.log("--- onClick: " + target);
+                    console.log("--- onClick target: " + target);
                     if (target === 'cancel') {
                         product_details.reload();
                     } else if (target === 'excel') {
-
+                        console.log("--- onClick Products excel: " + target);
                     }
                 }
             },
@@ -265,17 +265,11 @@
                 { field: 'supplierRegion', text: 'Supplier Region', size: '150px', searchable: true, sortable: true }
             ],
             onAdd: function (event) {
-
+                console.log('-- Product onAdd--');
             },
             onRequest: function (event) {
                 console.log('-- server call --');
                 console.log(event);
-                console.log("Search all value: " + grid_product_details_search_all.value)
-                console.log("---> ")
-                event.detail.postData.searchLogic = 'AND'
-                if (grid_product_details_search_all.value !== '') {
-                    event.detail.postData.searchLogic = 'OR'
-                }
             },
             onSave: function (event) {
                 event.onComplete = function () {
@@ -331,11 +325,11 @@
                     { type: 'button', id: 'excel', text: 'Excel', icon: 'w2ui-icon-plus' },
                 ],
                 onClick: function (target, data) {
-                    console.log("--- onClick: " + target);
+                    console.log("--- onClick Orders: " + target);
                     if (target === 'cancel') {
                         orders.reload();
                     } else if (target === 'excel') {
-
+                        console.log("onClick Excel " + target)
                     }
                 }
             },

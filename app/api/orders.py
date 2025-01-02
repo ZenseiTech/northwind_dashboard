@@ -1,5 +1,6 @@
 """Order module."""
 from flask import request
+from sqlalchemy import or_
 
 from app.api import response
 from app.api.query import create_dinamic_filters, create_dinamic_sort
@@ -35,7 +36,10 @@ def orders():
     request_data = build_request(body=request.values["request"])
     filters = create_dinamic_filters(request_data=request_data, object=OrderView)
 
-    query = query.filter(*filters)
+    if request_data.searchLogic == "OR":
+        query = query.filter(or_(*filters))
+    else:
+        query = query.filter(*filters)
 
     count = query.count()
     print(f"---------------> Count is: {count}")

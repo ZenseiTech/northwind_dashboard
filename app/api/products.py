@@ -46,8 +46,6 @@ def product_details():
     else:
         query = query.filter(*filters)
 
-    # query = query.filter(*filters)
-
     count = query.count()
     print(f"---------------> Count is: {count}")
 
