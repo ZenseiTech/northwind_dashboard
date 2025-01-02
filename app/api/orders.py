@@ -35,8 +35,7 @@ def orders():
     request_data = build_request(body=request.values["request"])
     filters = create_dinamic_filters(request_data=request_data, object=OrderView)
 
-    for filter in filters:
-        query = query.filter(filter)
+    query = query.filter(*filters)
 
     count = query.count()
     print(f"---------------> Count is: {count}")

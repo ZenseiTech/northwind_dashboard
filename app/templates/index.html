@@ -270,6 +270,12 @@
             onRequest: function (event) {
                 console.log('-- server call --');
                 console.log(event);
+                console.log("Search all value: " + grid_product_details_search_all.value)
+                console.log("---> ")
+                event.detail.postData.searchLogic = 'AND'
+                if (grid_product_details_search_all.value !== '') {
+                    event.detail.postData.searchLogic = 'OR'
+                }
             },
             onSave: function (event) {
                 event.onComplete = function () {
