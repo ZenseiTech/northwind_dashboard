@@ -11,7 +11,7 @@
     import { w2layout, w2sidebar, w2grid, query, w2form, w2popup } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
 
     let pstyle = 'border: 1px solid #dfdfdf; padding: 5px; font-size:11px;';
-    let pstyle2 = 'border: 1px solid #dfdfdf; padding: 30px;  text-align: center;';
+    let pstyle2 = 'border: 1px solid #dfdfdf; padding: 5px;  text-align: center;';
     let grid_style = 'font-size:16px;color:black';
 
     let countries = ['USA', 'Canada', 'France', 'Ireland', 'Belgium', 'Venezuela', 'Norway', 'UK', 'Spain', 'Switzerland', 'Argentina', 'Portugal', 'Austria', 'Germany', 'Brazil', 'Mexico', 'Finland', 'Italy', 'Denmark', 'Poland', 'Sweden'];
@@ -300,7 +300,6 @@
                     if (layout_layout2_panel_main.style.opacity === '1' || layout_layout2_panel_main.style.opacity === '') {
                         layout2.toggle('main', window.instant)
                     }
-                    hideSearchSave(document)
                 }
             },
         },
@@ -388,28 +387,25 @@
             onClick(event) {
                 event.onComplete = function () {
                     const record = orders.records[this.getSelection(true)]
-                    console.log("Order status ... " + record.orderStatus)
+                    console.log("Order onClick ... ")
                     let recid = event.detail.recid
                     getOrderDetails(recid);
                 }
             },
             onLoad: function (event) {
-                console.log("Loading ...");
+                console.log("Loading orders ...");
                 orders.searches[2].options.items = regions
                 event.onComplete = function () {
                     console.log("onComplete orders Loading ...");
                     if (layout_layout2_panel_main.style.opacity === '1' || layout_layout2_panel_main.style.opacity === '') {
                         layout2.toggle('main', window.instant)
                     }
-                    hideSearchSave(document)
                 }
             }
         },
         orderdetails: {
             name: 'orderdetails',
-            // url: server_url + '/orderdetails/-1',
             header: 'Order Details',
-            // style: grid_style,
             limit: 500,
             show: {
                 toolbar: true,
@@ -421,7 +417,7 @@
                 // { field: 'customerId', text: 'Customer Id', size: '80px', searchable: true, sortable: true, frozen: true },
                 { field: 'productName', text: 'Product Name', size: '180px', searchable: true, sortable: true, info: true, frozen: true },
                 { field: 'unitPrice', text: 'Unit Price', size: '160px', searchable: true, sortable: true, render: 'money', editable: { type: 'money' } },
-                { field: 'quantity', text: 'Quantity', size: '110px', searchable: true, sortable: true, render: 'int', editable: { type: 'int' } },
+                { field: 'quantity', text: 'Quantity', size: '110px', searchable: true, sortable: true, render: 'int', editable: { type: 'int', min: 0, max: 32756 } },
                 { field: 'discount', text: 'Discount', size: '120px', searchable: true, sortable: true, render: 'money', editable: { type: 'money' } },
             ],
             onSave: function (event) {
@@ -436,7 +432,7 @@
 
                 event.onComplete = function () {
                     const record = orders.records[this.getSelection(true)]
-                    console.log("Order status ... " + record.orderStatus)
+                    console.log("Order Detail status ... " + record.orderStatus)
                     let recid = event.detail.recid
                 }
             },

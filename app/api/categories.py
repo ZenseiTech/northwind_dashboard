@@ -1,5 +1,6 @@
 """Category module."""
-from ..models import Category
+from app.models import Category
+
 from . import api
 
 

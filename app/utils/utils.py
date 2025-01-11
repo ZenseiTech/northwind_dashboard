@@ -1,6 +1,6 @@
 """General utils module."""
 IN_DATE_FORMAT = "%m/%d/%Y"
-
+OUT_DATE_FORMAT = "%Y-%m-%d"
 
 num_to_bool = {"1": True, "0": False}
 

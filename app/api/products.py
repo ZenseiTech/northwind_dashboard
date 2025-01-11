@@ -9,8 +9,8 @@ from app.api.query import create_dinamic_filters, create_dinamic_sort
 from app.api.request import build_request
 
 from ..models import ProductView
+from ..utils.utils import num_to_bool
 from . import api
-from .utils import num_to_bool
 
 
 @api.route("/products", methods=("GET", "POST"))

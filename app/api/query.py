@@ -3,8 +3,7 @@
 import datetime
 import re
 
-IN_DATE_FORMAT = "%m/%d/%Y"
-OUT_DATE_FORMAT = "%Y-%m-%d"
+from app.utils.utils import IN_DATE_FORMAT, OUT_DATE_FORMAT
 
 operators_map = {
     "text": "text",
@@ -87,6 +86,12 @@ def create_dinamic_filters(request_data, object):
                 date1 = date_format(search.value[0], IN_DATE_FORMAT, OUT_DATE_FORMAT)
                 date2 = date_format(search.value[1], IN_DATE_FORMAT, OUT_DATE_FORMAT)
                 filters.append(attr.between(date1, date2))
+            elif search.operator == "less":
+                date1 = date_format(search.value, IN_DATE_FORMAT, OUT_DATE_FORMAT)
+                filters.append(attr < date1)
+            elif search.operator == "more":
+                date1 = date_format(search.value, IN_DATE_FORMAT, OUT_DATE_FORMAT)
+                filters.append(attr > date1)
             else:
                 filters.append(
                     attr == date_format(search.value, IN_DATE_FORMAT, OUT_DATE_FORMAT)
