@@ -4,7 +4,7 @@ import { w2layout } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6
 let pstyle = 'border: 1px solid #dfdfdf; padding: 5px; font-size:11px;';
 let pstyle2 = 'border: 1px solid #dfdfdf; padding: 5px;  text-align: center;';
 
-let config_layout = {
+let config = {
     layout: {
         name: 'layout',
         padding: 0,
@@ -29,5 +29,6 @@ let config_layout = {
     }
 }
 
-export let layout = new w2layout(config_layout.layout)
-export let layout2 = new w2layout(config_layout.layout2)
+export let layout = new w2layout(config.layout)
+export let layout2 = new w2layout(config.layout2)
+export let layoutProduct = new w2layout(config.layoutProduct)

@@ -1,8 +1,35 @@
+import { w2grid, w2form, w2popup } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
 import { server_url } from '../scripts/server.js'
-import { w2grid } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
-import { layout2 } from '../scripts/layout.js'
+import { layout2, layoutProduct } from '../scripts/layout.js'
+import { getRegions, getCategories } from '../scripts/common.js'
 
-let categories = []
+let suppliers = []
+
+let regions = await getRegions()
+let categories = await getCategories()
+
+
+window.openPopup = function () {
+    formProduct.recid = product_details.getSelection()[0];
+    formProduct.url = server_url + "/product"
+
+    w2popup.open({
+        // title: 'Popup',
+        width: 600,
+        height: 650,
+        showMax: true,
+        body: '<div id="main" style="position: absolute; left: 2px; right: 2px; top: 0px; bottom: 3px;"></div>'
+    })
+        .then(e => {
+            layoutProduct.render('#w2ui-popup #main')
+            formProduct.fields[8].options.items = categories
+            formProduct.fields[9].options.items = suppliers
+            formProduct.fields[10].options.items = regions
+            layoutProduct.html('main', formProduct)
+        })
+    formProduct.reload();
+}
+
 
 let config_products = {
     product_details: {
@@ -95,6 +122,49 @@ let config_products = {
             }
         },
     },
+    productForm: {
+        header: 'Edit Product',
+        name: 'prooductForm',
+        style: 'border: 1px solid #efefef',
+        fields: [
+            { field: 'recid', type: 'text', html: { label: 'ID', attr: 'size="10" readonly' } },
+            { field: 'productName', type: 'text', required: true, html: { label: 'Product Name', attr: 'size="40" maxlength="64"' } },
+            { field: 'quantityPerUnit', type: 'text', required: true, html: { label: 'Qty Per Unit', attr: 'size="40" maxlength="64"' } },
+            { field: 'unitPrice', type: 'money', html: { label: 'Unit Price' } },
+            { field: 'unitsInStock', type: 'int', html: { label: 'Units In Stock' } },
+            { field: 'unitsOnOrder', type: 'int', html: { label: 'Units On Order' } },
+            { field: 'reorderLevel', type: 'int', html: { label: 'Reorder Level' } },
+            {
+                field: 'discontinued', type: 'toggle', html: { label: 'Discontinued' }
+            },
+            {
+                field: 'categoryName', type: 'list',
+                html: { label: 'Category' },
+                options: { items: categories }
+            },
+            {
+                field: 'supplierName', type: 'list',
+                html: { label: 'Supplier' },
+                options: { items: suppliers }
+            },
+            {
+                field: 'supplierRegion', type: 'list',
+                html: { label: 'Supplier Region' },
+                options: { items: regions }
+            }
+        ],
+        actions: {
+            reset() {
+                formProduct.reload();
+            },
+            save() {
+                let errors = this.validate()
+                if (errors.length > 0) return
+                formProduct.save();
+            }
+        }
+    },
 }
 
 export let product_details = new w2grid(config_products.product_details)
+export let formProduct = new w2form(config_products.productForm)

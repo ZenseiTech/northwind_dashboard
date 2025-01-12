@@ -1,21 +1,18 @@
 
-import { w2layout, w2sidebar, w2grid, query, w2form, w2popup } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
-import { product_details } from '../scripts/products.js'
+import { w2sidebar, w2grid } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
+import { product_details, formProduct } from '../scripts/products.js'
 import { server_url } from '../scripts/server.js'
 import { layout, layout2 } from '../scripts/layout.js'
+import { getRegions } from '../scripts/common.js'
 
 let pstyle = 'border: 1px solid #dfdfdf; padding: 5px; font-size:11px;';
 let grid_style = 'font-size:16px;color:black';
 
 let countries = ['USA', 'Canada', 'France', 'Ireland', 'Belgium', 'Venezuela', 'Norway', 'UK', 'Spain', 'Switzerland', 'Argentina', 'Portugal', 'Austria', 'Germany', 'Brazil', 'Mexico', 'Finland', 'Italy', 'Denmark', 'Poland', 'Sweden'];
 
-let regions = []
-
-let categories = []
-
-let suppliers = []
-
 let cities = ['Aachen', 'Albuquerque', 'Anchorage', 'Barcelona', 'Barquisimeto', 'Bergamo', 'Berlin', 'Bern', 'Boise', 'Brandenburg', 'Bruxelles', 'Bräcke', 'Buenos Aires', 'Butte', 'Campinas', 'Caracas', 'Charleroi', 'Colchester', 'Cork', 'Cowes', 'Cunewalde', 'Elgin', 'Eugene', 'Frankfurt a.M.', 'Genève', 'Graz', 'Helsinki', 'I. de Margarita', 'Kirkland', 'Kobenhavn', 'Köln', 'Lander'];
+
+let regions = await getRegions()
 
 
 function getOrderRecord(recid) {
@@ -26,30 +23,6 @@ function getOrderRecord(recid) {
     }
     return [];
 }
-
-
-function getRegions() {
-    console.log("Calling regions ....")
-    fetch(server_url + '/shipregions')
-        .then((response) => {
-            return response.json();
-        })
-        .then((data) => {
-            regions = data;
-        })
-};
-
-
-function getCategories() {
-    console.log("Calling categories ....")
-    fetch(server_url + '/categories')
-        .then((response) => {
-            return response.json();
-        })
-        .then((data) => {
-            categories = data;
-        })
-};
 
 async function getOrderDetails(orderId) {
     fetch(server_url + '/orderdetails/' + orderId)
@@ -69,28 +42,6 @@ async function getOrderDetails(orderId) {
 
 
 let config = {
-    layout: {
-        name: 'layout',
-        padding: 0,
-        panels: [
-            { type: 'left', size: 150, resizable: true, style: pstyle, minSize: 50 },
-        ]
-    },
-    layout2: {
-        name: 'layout2',
-        padding: 6,
-        panels: [
-            { type: 'top', minSize: 650, resizable: true, style: pstyle, overflow: 'hidden' },
-            { type: 'bottom', minSize: 120, resizable: true, style: pstyle, overflow: 'hidden' }
-        ]
-    },
-    layoutProduct: {
-        name: 'layoutProduct',
-        padding: 0,
-        panels: [
-            { type: 'main', size: 150, resizable: true, style: pstyle, minSize: 50 },
-        ]
-    },
     sidebar: {
         name: 'sidebar',
         flatButton: false,
@@ -329,62 +280,12 @@ let config = {
             }
         },
     },
-    productForm: {
-        header: 'Edit Product',
-        name: 'prooductForm',
-        style: 'border: 1px solid #efefef',
-        fields: [
-            { field: 'recid', type: 'text', html: { label: 'ID', attr: 'size="10" readonly' } },
-            { field: 'productName', type: 'text', required: true, html: { label: 'Product Name', attr: 'size="40" maxlength="64"' } },
-            { field: 'quantityPerUnit', type: 'text', required: true, html: { label: 'Qty Per Unit', attr: 'size="40" maxlength="64"' } },
-            { field: 'unitPrice', type: 'money', html: { label: 'Unit Price' } },
-            { field: 'unitsInStock', type: 'int', html: { label: 'Units In Stock' } },
-            { field: 'unitsOnOrder', type: 'int', html: { label: 'Units On Order' } },
-            { field: 'reorderLevel', type: 'int', html: { label: 'Reorder Level' } },
-            {
-                field: 'discontinued', type: 'toggle', html: { label: 'Discontinued' }
-            },
-            {
-                field: 'categoryName', type: 'list',
-                html: { label: 'Category' },
-                options: { items: categories }
-            },
-            {
-                field: 'supplierName', type: 'list',
-                html: { label: 'Supplier' },
-                options: { items: suppliers }
-            },
-            {
-                field: 'supplierRegion', type: 'list',
-                html: { label: 'Supplier Region' },
-                options: { items: regions }
-            }
-        ],
-        actions: {
-            reset() {
-                formProduct.reload();
-            },
-            save() {
-                let errors = this.validate()
-                if (errors.length > 0) return
-                formProduct.save();
-            }
-        }
-    },
 };
-
-getRegions()
-getCategories()
-
-// let layout = new w2layout(config.layout)
-// let layout2 = new w2layout(config.layout2)
 
 let sidebar = new w2sidebar(config.sidebar)
 let customers = new w2grid(config.customers)
-// let product_details = new w2grid(config_products.product_details)
 let orders = new w2grid(config.orders)
 let orderdetails = new w2grid(config.orderdetails)
-let formProduct = new w2form(config.productForm)
 
 // initialization
 layout.render('#main')
@@ -392,27 +293,3 @@ layout.html('left', sidebar)
 layout.html('main', layout2)
 layout2.html('top', product_details)
 layout2.html('main', orderdetails)
-
-
-let layoutProduct = new w2layout(config.layoutProduct)
-
-window.openPopup = function () {
-    formProduct.recid = product_details.getSelection()[0];
-    formProduct.url = server_url + "/product"
-
-    w2popup.open({
-        // title: 'Popup',
-        width: 600,
-        height: 650,
-        showMax: true,
-        body: '<div id="main" style="position: absolute; left: 2px; right: 2px; top: 0px; bottom: 3px;"></div>'
-    })
-        .then(e => {
-            layoutProduct.render('#w2ui-popup #main')
-            formProduct.fields[8].options.items = categories
-            formProduct.fields[9].options.items = suppliers
-            formProduct.fields[10].options.items = regions
-            layoutProduct.html('main', formProduct)
-        })
-    formProduct.reload();
-}
