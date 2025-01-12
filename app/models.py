@@ -315,7 +315,7 @@ class Supplier(db.Model):
 
     def __repr__(self):
         """Representation."""
-        return "<Companies %r>" % self.company_name
+        return "<Suppliers %r>" % self.company_name
 
 
 class ProductView(db.Model):
@@ -626,3 +626,19 @@ order_details = db.Table(
     db.Column("quantity", db.Integer),
     db.Column("discount", db.Float),
 )
+
+
+class ShipCities(db.Model):
+    """ShipCities model."""
+
+    __tablename__ = "cities"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    city_name = db.Column(db.String(64), nullable=True)
+
+
+class ShipCountries(db.Model):
+    """ShipCountries model."""
+
+    __tablename__ = "countries"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    country_name = db.Column(db.String(64), nullable=True)

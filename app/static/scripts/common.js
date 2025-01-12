@@ -3,6 +3,34 @@ import { server_url } from './server.js'
 let regions = []
 let categories = []
 let suppliers = []
+let cities = []
+let countries = []
+
+export async function getCities() {
+    console.log("Calling cities ....")
+    await fetch(server_url + '/shipcities')
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            cities = data;
+        })
+    return cities
+};
+
+
+export async function getCountries() {
+    console.log("Calling countries ....")
+    await fetch(server_url + '/shipcountries')
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            countries = data;
+        })
+    return countries
+};
+
 
 export async function getRegions() {
     console.log("Calling regions ....")
