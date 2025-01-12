@@ -26,9 +26,17 @@ let config = {
         panels: [
             { type: 'main', size: 150, resizable: true, style: pstyle, minSize: 50 },
         ]
+    },
+    layoutOrder: {
+        name: 'layoutOrder',
+        padding: 0,
+        panels: [
+            { type: 'main', size: 150, resizable: true, style: pstyle, minSize: 50 },
+        ]
     }
 }
 
 export let layout = new w2layout(config.layout)
 export let layout2 = new w2layout(config.layout2)
 export let layoutProduct = new w2layout(config.layoutProduct)
+export let layoutOrder = new w2layout(config.layoutOrder)

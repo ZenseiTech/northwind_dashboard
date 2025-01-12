@@ -1,14 +1,15 @@
-import { w2grid, w2form, w2popup } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
+import { w2grid, w2form, w2popup, w2field, query } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
 import { server_url } from './server.js'
 import { layout2, layoutProduct } from './layout.js'
 import { getRegions, getCategories, getSuppliers } from './common.js'
+
+new w2field('money', { el: query('#us-money')[0] })
 
 let suppliers = await getSuppliers()
 let regions = await getRegions()
 let categories = await getCategories()
 
-
-window.openPopup = function () {
+function openPopup() {
     formProduct.recid = product_details.getSelection()[0];
     formProduct.url = server_url + "/product"
 
@@ -71,6 +72,7 @@ let config = {
         ],
         // reorderColumns: true,
         columns: [
+            { field: 'recid', text: 'Id', size: '80px', searchable: true, sortable: true, frozen: true },
             { field: 'productName', text: 'Product Name', size: '170px', searchable: true, sortable: true, info: true, frozen: true },
             { field: 'quantityPerUnit', text: 'Qty Per Unit', size: '140px', searchable: true, sortable: true },
             { field: 'unitPrice', text: 'Unit Price', size: '160px', searchable: true, sortable: true, render: 'money' },

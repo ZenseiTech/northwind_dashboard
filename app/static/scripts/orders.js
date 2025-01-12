@@ -2,7 +2,7 @@
 import { w2grid, w2form, w2popup } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
 import { server_url } from './server.js'
 import { getRegions } from './common.js'
-import { layout2 } from './layout.js'
+import { layout2, layoutOrder } from './layout.js'
 
 let countries = ['USA', 'Canada', 'France', 'Ireland', 'Belgium', 'Venezuela', 'Norway', 'UK', 'Spain', 'Switzerland', 'Argentina', 'Portugal', 'Austria', 'Germany', 'Brazil', 'Mexico', 'Finland', 'Italy', 'Denmark', 'Poland', 'Sweden'];
 
@@ -35,6 +35,28 @@ async function getOrderDetails(orderId) {
                 layout2.toggle('main', window.instant)
             }
         })
+}
+
+
+function openPopup() {
+    formOrder.recid = orders.getSelection()[0];
+    formOrder.url = server_url + "/order"
+
+    w2popup.open({
+        // title: 'Popup',
+        width: 600,
+        height: 650,
+        showMax: true,
+        body: '<div id="main" style="position: absolute; left: 2px; right: 2px; top: 0px; bottom: 3px;"></div>'
+    })
+        .then(e => {
+            layoutOrder.render('#w2ui-popup #main')
+            // formOrder.fields[8].options.items = categories
+            // formOrder.fields[9].options.items = suppliers
+            // formOrder.fields[10].options.items = regions
+            layoutOrder.html('main', formOrder)
+        })
+    formOrder.reload();
 }
 
 
@@ -80,7 +102,7 @@ let config = {
             { field: 'shippedDate', label: 'Shipped Date', type: 'date' },
         ],
         columns: [
-            // { field: 'customerId', text: 'Customer Id', size: '80px', searchable: true, sortable: true, frozen: true },
+            { field: 'recid', text: 'Id', size: '80px', searchable: true, sortable: true, frozen: true },
             { field: 'customerName', text: 'Customer Name', size: '160px', searchable: true, sortable: true, info: true, frozen: true },
             { field: 'employeeName', text: 'Employee Name', size: '160px', searchable: true, sortable: true },
             { field: 'freight', text: 'Freight', size: '110px', searchable: true, sortable: true, render: 'money' },
@@ -116,6 +138,9 @@ let config = {
         },
         onDblClick: function (event) {
             console.log('Column is: ' + event.detail.column + ' and recid is: ' + event.detail.recid);
+            event.onComplete = function () {
+                openPopup();
+            }
         },
         onKeydown: function (event) {
 
@@ -144,8 +169,8 @@ let config = {
         header: 'Order Details',
         limit: 500,
         show: {
-            toolbar: true,
-            toolbarSave: true,
+            // toolbar: true,
+            // toolbarSave: true,
             header: true,
             footer: true,
         },
@@ -173,7 +198,54 @@ let config = {
             }
         },
     },
+    orderForm: {
+        header: 'Edit Order',
+        name: 'orderForm',
+        style: 'border: 1px solid #efefef',
+        fields: [
+
+            { field: 'recid', type: 'text', html: { label: 'ID', attr: 'size="10" readonly' } },
+            { field: 'customerName', type: 'text', required: true, html: { label: 'Customer Name', attr: 'size="40" maxlength="64"' } },
+            { field: 'employeeName', type: 'text', required: true, html: { label: 'Employee Name', attr: 'size="40" maxlength="64"' } },
+            { field: 'freight', type: 'money', required: true, html: { label: 'Freight', attr: 'size="40" maxlength="64"' } },
+            { field: 'orderDate', type: 'date', required: true, html: { label: 'Order Date', attr: 'size="20" maxlength="40"' } },
+            { field: 'requiredDate', type: 'date', required: false, html: { label: 'Required Date', attr: 'size="20" maxlength="40"' } },
+            { field: 'shipperName', type: 'text', required: true, html: { label: 'Shipper Name', attr: 'size="40" maxlength="64"' } },
+            { field: 'shippedDate', type: 'date', required: false, html: { label: 'Shipped Date', attr: 'size="20" maxlength="40"' } },
+            { field: 'shipAddress', type: 'text', required: true, html: { label: 'Ship Address', attr: 'size="40" maxlength="64"' } },
+            {
+                field: 'shipCity', type: 'list',
+                html: { label: 'Ship City' },
+                options: { items: cities },
+                required: true,
+            },
+            {
+                field: 'shipCountry', type: 'list',
+                html: { label: 'Ship Country' },
+                options: { items: countries },
+                required: true,
+            },
+            { field: 'shipPostalCode', type: 'text', required: true, html: { label: 'Ship Post Code', attr: 'size="40" maxlength="64"' } },
+            {
+                field: 'shipRegion', type: 'list',
+                html: { label: 'Shipper Region' },
+                options: { items: regions },
+                required: true,
+            },
+        ],
+        actions: {
+            reset() {
+                formOrder.reload();
+            },
+            save() {
+                let errors = this.validate()
+                if (errors.length > 0) return
+                formOrder.save();
+            }
+        }
+    },
 }
 
 export let orders = new w2grid(config.orders)
 export let orderdetails = new w2grid(config.orderdetails)
+export let formOrder = new w2form(config.orderForm)
