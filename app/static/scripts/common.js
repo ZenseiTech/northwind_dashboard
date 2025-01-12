@@ -1,7 +1,8 @@
-import { server_url } from '../scripts/server.js'
+import { server_url } from './server.js'
 
 let regions = []
 let categories = []
+let suppliers = []
 
 export async function getRegions() {
     console.log("Calling regions ....")
@@ -26,4 +27,17 @@ export async function getCategories() {
             categories = data;
         })
     return categories
+};
+
+
+export async function getSuppliers() {
+    console.log("Calling suppliers ....")
+    await fetch(server_url + '/suppliers')
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            suppliers = data;
+        })
+    return suppliers
 };

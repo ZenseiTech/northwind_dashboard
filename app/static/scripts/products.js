@@ -1,10 +1,9 @@
 import { w2grid, w2form, w2popup } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
-import { server_url } from '../scripts/server.js'
-import { layout2, layoutProduct } from '../scripts/layout.js'
-import { getRegions, getCategories } from '../scripts/common.js'
+import { server_url } from './server.js'
+import { layout2, layoutProduct } from './layout.js'
+import { getRegions, getCategories, getSuppliers } from './common.js'
 
-let suppliers = []
-
+let suppliers = await getSuppliers()
 let regions = await getRegions()
 let categories = await getCategories()
 
@@ -31,7 +30,7 @@ window.openPopup = function () {
 }
 
 
-let config_products = {
+let config = {
     product_details: {
         name: 'product_details',
         url: server_url + '/productdetails',
@@ -144,7 +143,7 @@ let config_products = {
             },
             {
                 field: 'supplierName', type: 'list',
-                html: { label: 'Supplier' },
+                html: { label: 'Supplier', attr: 'style="width: 400px"' },
                 options: { items: suppliers }
             },
             {
@@ -166,5 +165,5 @@ let config_products = {
     },
 }
 
-export let product_details = new w2grid(config_products.product_details)
-export let formProduct = new w2form(config_products.productForm)
+export let product_details = new w2grid(config.product_details)
+export let formProduct = new w2form(config.productForm)
