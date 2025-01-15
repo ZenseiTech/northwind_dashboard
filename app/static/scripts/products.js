@@ -14,10 +14,11 @@ function openPopup() {
     formProduct.url = server_url + "/product"
 
     w2popup.open({
-        // title: 'Popup',
+        title: 'Product',
         width: 600,
         height: 650,
         showMax: true,
+        modal: true,
         body: '<div id="main" style="position: absolute; left: 2px; right: 2px; top: 0px; bottom: 3px;"></div>'
     })
         .then(e => {
@@ -28,6 +29,35 @@ function openPopup() {
             layoutProduct.html('main', formProduct)
         })
     formProduct.reload();
+}
+
+function popup(sucesss) {
+    if (sucesss === 'true') {
+        w2popup.open({
+            title: 'Success',
+            text: 'The update has been successful',
+            actions: ['Ok'],
+            width: 500,
+            height: 300,
+        })
+            .ok((evt) => {
+                console.log('ok', evt)
+                w2popup.close()
+            })
+    } else {
+        w2popup.open({
+            title: 'Error',
+            text: 'There was an error updating. See your Admin',
+            actions: ['Ok'],
+            width: 500,
+            height: 300,
+        })
+            .ok((evt) => {
+                console.log('ok', evt)
+                w2popup.close()
+            })
+    }
+
 }
 
 
@@ -131,39 +161,47 @@ let config = {
             { field: 'recid', type: 'text', html: { label: 'ID', attr: 'size="10" readonly' } },
             { field: 'productName', type: 'text', required: true, html: { label: 'Product Name', attr: 'size="40" maxlength="64"' } },
             { field: 'quantityPerUnit', type: 'text', required: true, html: { label: 'Qty Per Unit', attr: 'size="40" maxlength="64"' } },
-            { field: 'unitPrice', type: 'money', html: { label: 'Unit Price' } },
-            { field: 'unitsInStock', type: 'int', html: { label: 'Units In Stock' } },
-            { field: 'unitsOnOrder', type: 'int', html: { label: 'Units On Order' } },
-            { field: 'reorderLevel', type: 'int', html: { label: 'Reorder Level' } },
+            { field: 'unitPrice', type: 'money', required: true, html: { label: 'Unit Price' } },
+            { field: 'unitsInStock', type: 'int', required: true, html: { label: 'Units In Stock' } },
+            { field: 'unitsOnOrder', type: 'int', required: true, html: { label: 'Units On Order' } },
+            { field: 'reorderLevel', type: 'int', required: true, html: { label: 'Reorder Level' } },
             {
-                field: 'discontinued', type: 'toggle', html: { label: 'Discontinued' }
+                field: 'discontinued', type: 'toggle', required: true, html: { label: 'Discontinued' }
             },
             {
                 field: 'categoryName', type: 'list',
-                html: { label: 'Category' },
+                html: { label: 'Category' }, required: true,
                 options: { items: categories }
             },
             {
-                field: 'supplierName', type: 'list',
+                field: 'supplierName', type: 'list', required: true,
                 html: { label: 'Supplier', attr: 'style="width: 400px"' },
                 options: { items: suppliers }
             },
             {
-                field: 'supplierRegion', type: 'list',
-                html: { label: 'Supplier Region' },
-                options: { items: regions }
+                field: 'supplierRegion', type: 'text', html: { label: 'Supplier Region', attr: 'readonly' }
             }
         ],
+        onSave: function (event) {
+            event.onComplete = function (response) {
+                if (response.detail.data['success']) {
+                    popup('true')
+                } else {
+                    popup('false')
+                }
+
+            }
+        },
         actions: {
-            reset() {
+            reset(event) {
                 formProduct.reload();
             },
-            save() {
+            save(event) {
                 console.log("Saving the product...")
                 let errors = this.validate()
                 if (errors.length > 0) return
                 formProduct.save();
-            }
+            },
         }
     },
 }

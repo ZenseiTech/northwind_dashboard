@@ -51,9 +51,6 @@ def create_object(record):
 def products():
     """Product API."""
     products = ProductView.query.all()
-    # categories = Category.query.filter_by(categoryName='Produce').all()
-    # categories = Category.query.limit(2).all()
-    # Category.query.limit
     for product in products:
         print(f"Name: {product}")
     return {"status": "Ok"}
@@ -100,6 +97,25 @@ def product_details():
     return response.grid_response("Product", products, count)
 
 
+def __update(request_data):
+    in_record = create_object(request_data["record"])
+    product = Product(**in_record)
+    product_update = Product.query.get(product.id)
+
+    product_update.product_name = product.product_name
+    product_update.quantity_per_unit = product.quantity_per_unit
+    product_update.unit_price = product.unit_price
+    product_update.units_in_stock = product.units_in_stock
+    product_update.units_on_order = product.units_on_order
+    product_update.reorder_level = product.reorder_level
+    product_update.discontinued = product.discontinued
+    product_update.supplier_id = product.supplier_id
+    product_update.category_id = product.category_id
+
+    product_update.units_on_order = product.units_on_order
+    db.session.commit()
+
+
 @api.route(
     "/product",
     methods=(
@@ -122,14 +138,9 @@ def product():
         record = ProductView.product_record(d)
 
     elif request_data["action"] == "save":
-        print("Saving to DB")
-        in_record = {}
         if request_data["recid"]:
-            in_record = create_object(request_data["record"])
-            product = Product(**in_record)
-            product_update = Product.query.get(product.id)
-            product_update.units_on_order = product.units_on_order
-            db.session.commit()
+            print("Product update...")
+            __update(request_data)
         else:
             print("Add...")
 
