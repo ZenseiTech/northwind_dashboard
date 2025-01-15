@@ -335,6 +335,23 @@ class ProductView(db.Model):
     category_name = db.Column(db.String)
 
     @staticmethod
+    def product_record(d):
+        """Return a product dictionary."""
+        record = {}
+        record["recid"] = d.id
+        record["productName"] = d.product_name
+        record["quantityPerUnit"] = d.quantity_per_unit
+        record["unitPrice"] = d.unit_price
+        record["unitsInStock"] = d.units_in_stock
+        record["unitsOnOrder"] = d.units_on_order
+        record["reorderLevel"] = d.reorder_level
+        record["discontinued"] = num_to_bool[d.discontinued]
+        record["categoryName"] = d.category_name
+        record["supplierName"] = d.supplier_name
+        record["supplierRegion"] = d.supplier_region
+        return record
+
+    @staticmethod
     def product_response(data, count):
         """Create the product response."""
         response = {}
@@ -344,18 +361,7 @@ class ProductView(db.Model):
         records = []
 
         for d in data:
-            record = {}
-            record["recid"] = d.id
-            record["productName"] = d.product_name
-            record["quantityPerUnit"] = d.quantity_per_unit
-            record["unitPrice"] = d.unit_price
-            record["unitsInStock"] = d.units_in_stock
-            record["unitsOnOrder"] = d.units_on_order
-            record["reorderLevel"] = d.reorder_level
-            record["discontinued"] = num_to_bool[d.discontinued]
-            record["categoryName"] = d.category_name
-            record["supplierName"] = d.supplier_name
-            record["supplierRegion"] = d.supplier_region
+            record = ProductView.product_record(d)
 
             records.append(record)
 
@@ -511,6 +517,26 @@ class OrderView(db.Model):
     ship_via = db.Column(db.Integer, db.ForeignKey("shippers.id"))
 
     @staticmethod
+    def order_record(d):
+        """Return an Order dictionary."""
+        record = {}
+        record["recid"] = d.id
+        record["customerName"] = d.customer_name
+        record["customerId"] = d.customer_id
+        record["employeeName"] = d.employee_name
+        record["freight"] = d.freight
+        record["orderDate"] = date_format(d.order_date, IN_DATE_FORMAT)
+        record["requiredDate"] = date_format(d.required_date, IN_DATE_FORMAT)
+        record["shippedDate"] = date_format(d.shipped_date, IN_DATE_FORMAT)
+        record["shipAddress"] = d.ship_address
+        record["shipCity"] = d.ship_city
+        record["shipCountry"] = d.ship_country
+        record["shipPostalCode"] = d.ship_postal_code
+        record["shipRegion"] = d.ship_region
+        record["shipperName"] = d.shipper_name
+        return record
+
+    @staticmethod
     def order_response(data, count):
         """Create the order response."""
         response = {}
@@ -520,22 +546,7 @@ class OrderView(db.Model):
         records = []
 
         for d in data:
-            record = {}
-            record["recid"] = d.id
-            record["customerName"] = d.customer_name
-            record["customerId"] = d.customer_id
-            record["employeeName"] = d.employee_name
-            record["freight"] = d.freight
-            record["orderDate"] = date_format(d.order_date, IN_DATE_FORMAT)
-            record["requiredDate"] = date_format(d.required_date, IN_DATE_FORMAT)
-            record["shippedDate"] = date_format(d.shipped_date, IN_DATE_FORMAT)
-            record["shipAddress"] = d.ship_address
-            record["shipCity"] = d.ship_city
-            record["shipCountry"] = d.ship_country
-            record["shipPostalCode"] = d.ship_postal_code
-            record["shipRegion"] = d.ship_region
-            record["shipperName"] = d.shipper_name
-
+            record = OrderView.order_record(d)
             records.append(record)
 
         response["records"] = records

@@ -5,8 +5,8 @@ from flask import request
 from sqlalchemy import or_
 
 from app.api import response
-from app.api.query import create_dinamic_filters, create_dinamic_sort
-from app.api.request import build_request
+from app.api.search_query import create_dinamic_filters, create_dinamic_sort
+from app.api.search_request import build_request
 
 from ..models import OrderDetailsView, OrderView, ShipCities, ShipCountries, ShipRegions
 from . import api
@@ -124,25 +124,10 @@ def order():
 
         # calling the query ...
         d = query.one()
-
-        record["recid"] = d.id
-        record["customerName"] = d.customer_name
-        record["customerId"] = d.customer_id
-        record["employeeName"] = d.employee_name
-        record["freight"] = d.freight
-        record["orderDate"] = d.order_date.strftime("%m/%d/%Y")
-        record["requiredDate"] = d.required_date.strftime("%m/%d/%Y")
-        record["shippedDate"] = d.shipped_date.strftime("%m/%d/%Y")
-        record["shipAddress"] = d.ship_address
-        record["shipCity"] = d.ship_city
-        record["shipCountry"] = d.ship_country
-        record["shipPostalCode"] = d.ship_postal_code
-        record["shipRegion"] = d.ship_region
-        record["shipperName"] = d.shipper_name
+        record = OrderView.order_record(d)
 
     elif request_data["action"] == "save":
         print("Saving to DB")
-        record = {}
         record["success"] = True
 
     return json.dumps(record)

@@ -5,12 +5,46 @@ from flask import request
 from sqlalchemy import or_
 
 from app.api import response
-from app.api.query import create_dinamic_filters, create_dinamic_sort
-from app.api.request import build_request
+from app.api.search_query import create_dinamic_filters, create_dinamic_sort
+from app.api.search_request import build_request
 
-from ..models import ProductView
-from ..utils.utils import num_to_bool
+from ..models import Category, Product, ProductView, Supplier, db
+from ..utils.utils import camel_case_to_snake
 from . import api
+
+
+def get_category(category_name):
+    """Return the category."""
+    query = Category.query
+    query = query.filter(Category.category_name == category_name)
+    return query.one()
+
+
+def get_supplier(supplier_name):
+    """Return the supplier."""
+    query = Supplier.query
+    query = query.filter(Supplier.company_name == supplier_name)
+    return query.one()
+
+
+def create_object(record):
+    """From a dictionary create the Product object."""
+    new_record = {}
+    for (key, value) in record.items():
+        if key == "supplierName":
+            new_record["supplier_id"] = get_supplier(record["supplierName"]["id"]).id
+        elif key == "categoryName":
+            new_record["category_id"] = get_category(record["categoryName"]["id"]).id
+        elif key == "supplierRegion":
+            pass
+        else:
+            new_record[camel_case_to_snake(key)] = value
+
+    if new_record["recid"]:
+        new_record["id"] = new_record["recid"]
+        del new_record["recid"]
+
+    return new_record
 
 
 @api.route("/products", methods=("GET", "POST"))
@@ -84,25 +118,21 @@ def product():
     if request_data["action"] == "get":
         query = ProductView.query
         query = query.filter(ProductView.id == request_data["recid"])
-
-        # calling the query ...
         d = query.one()
-
-        record["recid"] = d.id
-        record["productName"] = d.product_name
-        record["quantityPerUnit"] = d.quantity_per_unit
-        record["unitPrice"] = d.unit_price
-        record["unitsInStock"] = d.units_in_stock
-        record["unitsOnOrder"] = d.units_on_order
-        record["reorderLevel"] = d.reorder_level
-        record["discontinued"] = num_to_bool[d.discontinued]
-        record["categoryName"] = d.category_name
-        record["supplierName"] = d.supplier_name
-        record["supplierRegion"] = d.supplier_region
+        record = ProductView.product_record(d)
 
     elif request_data["action"] == "save":
         print("Saving to DB")
-        record = {}
+        in_record = {}
+        if request_data["recid"]:
+            in_record = create_object(request_data["record"])
+            product = Product(**in_record)
+            product_update = Product.query.get(product.id)
+            product_update.units_on_order = product.units_on_order
+            db.session.commit()
+        else:
+            print("Add...")
+
         record["success"] = True
 
     return json.dumps(record)

@@ -159,6 +159,7 @@ let config = {
                 formProduct.reload();
             },
             save() {
+                console.log("Saving the product...")
                 let errors = this.validate()
                 if (errors.length > 0) return
                 formProduct.save();

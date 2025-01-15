@@ -1,9 +1,8 @@
 """Filter queries."""
 
 import datetime
-import re
 
-from app.utils.utils import IN_DATE_FORMAT, OUT_DATE_FORMAT
+from app.utils.utils import IN_DATE_FORMAT, OUT_DATE_FORMAT, camel_case_to_snake
 
 operators_map = {
     "text": "text",
@@ -29,12 +28,6 @@ operators_map = {
 }
 
 bool_map = {"N": 0, "Y": 1}
-
-
-def camel_case_to_snake(key_value):
-    """Change camelcase to snakecase."""
-    pattern = re.compile(r"(?<!^)(?=[A-Z])")
-    return pattern.sub("_", key_value).lower()
 
 
 def create_dinamic_sort(request_data, object):
