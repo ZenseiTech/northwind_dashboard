@@ -9,26 +9,40 @@ let suppliers = await getSuppliers()
 let regions = await getRegions()
 let categories = await getCategories()
 
-function openPopup() {
-    formProduct.recid = product_details.getSelection()[0];
+function openPopup(isEdit) {
+
+    let recid = product_details.getSelection()[0];
+
+    if (isEdit && typeof (recid) === 'undefined') {
+        return;
+    }
+
     formProduct.url = server_url + "/product"
 
     w2popup.open({
-        title: 'Product',
+        // title: 'Product',
         width: 600,
         height: 650,
-        showMax: true,
+        showMax: false,
         modal: true,
         body: '<div id="main" style="position: absolute; left: 2px; right: 2px; top: 0px; bottom: 3px;"></div>'
     })
         .then(e => {
             layoutProduct.render('#w2ui-popup #main')
-            formProduct.fields[8].options.items = categories
-            formProduct.fields[9].options.items = suppliers
-            formProduct.fields[10].options.items = regions
+            if (isEdit) {
+                formProduct.header = "Edit Product"
+                formProduct.show('recid', 'supplierRegion')
+                formProduct.recid = product_details.getSelection()[0];
+                formProduct.fields[8].options.items = categories;
+                formProduct.fields[9].options.items = suppliers;
+                formProduct.fields[10].options.items = regions;
+            } else {
+                formProduct.clear()
+                formProduct.header = "Add Product"
+                formProduct.hide('recid', 'supplierRegion')
+            }
             layoutProduct.html('main', formProduct)
         })
-    formProduct.reload();
 }
 
 function popup(sucesss) {
@@ -43,6 +57,7 @@ function popup(sucesss) {
             .ok((evt) => {
                 console.log('ok', evt)
                 w2popup.close()
+                formProduct.reload();
             })
     } else {
         w2popup.open({
@@ -55,6 +70,7 @@ function popup(sucesss) {
             .ok((evt) => {
                 console.log('ok', evt)
                 w2popup.close()
+                formProduct.reload();
             })
     }
 
@@ -73,10 +89,12 @@ let config = {
             toolbar: true,
             footer: true,
             // toolbarSave: true,
-            toolbarAdd: true
+            // toolbarAdd: true
         },
         toolbar: {
             items: [
+                { type: 'button', id: 'add', text: 'Add', icon: 'w2ui-icon-plus' },
+                { type: 'button', id: 'edit', text: 'Edit', icon: 'w2ui-icon-plus' },
                 { type: 'break' },
                 // { type: 'button', id: 'cancel', text: 'Cancel', icon: 'w2ui-icon-cross' },
                 { type: 'spacer' },
@@ -86,6 +104,12 @@ let config = {
                 console.log("--- onClick target: " + target);
                 if (target === 'cancel') {
                     product_details.reload();
+                } else if (target === 'add') {
+                    console.log("--- add click")
+                    openPopup(false);
+                } else if (target === 'edit') {
+                    console.log("--- edit click")
+                    openPopup(true);
                 } else if (target === 'excel') {
                     console.log("--- onClick Products excel: " + target);
                 }
@@ -136,7 +160,7 @@ let config = {
         onDblClick: function (event) {
             console.log('Column is: ' + event.detail.column + ' and recid is: ' + event.detail.recid);
             event.onComplete = function () {
-                openPopup();
+                openPopup(true);
             }
         },
         onKeydown: function (event) {

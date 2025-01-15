@@ -42,7 +42,8 @@ def create_object(record):
 
     if new_record["recid"]:
         new_record["id"] = new_record["recid"]
-        del new_record["recid"]
+
+    del new_record["recid"]
 
     return new_record
 
@@ -97,6 +98,13 @@ def product_details():
     return response.grid_response("Product", products, count)
 
 
+def __save(request_data):
+    in_record = create_object(request_data["record"])
+    product = Product(**in_record)
+    db.session.add(product)
+    db.session.commit()
+
+
 def __update(request_data):
     in_record = create_object(request_data["record"])
     product = Product(**in_record)
@@ -138,11 +146,13 @@ def product():
         record = ProductView.product_record(d)
 
     elif request_data["action"] == "save":
-        if request_data["recid"]:
+        isAdd = request_data["record"]["recid"] is None
+        if isAdd:
+            print("Add...")
+            __save(request_data)
+        else:
             print("Product update...")
             __update(request_data)
-        else:
-            print("Add...")
 
         record["success"] = True
 
