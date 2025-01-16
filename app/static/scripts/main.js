@@ -16,7 +16,7 @@ let config = {
         nodes: [
             {
                 id: 'general', text: 'General', group: true, expanded: true, nodes: [
-                    { id: 'customers_grid', text: 'Customers', icon: 'w2ui-icon-info' },
+                    { id: 'customers_grid', text: 'Customers', icon: 'icon-address-book' },
                     { id: 'product_details_grid', text: 'Product Details', icon: "icon-table", selected: true },
                     { id: 'orders_grid', text: 'Orders', icon: 'icon-office' },
                 ]

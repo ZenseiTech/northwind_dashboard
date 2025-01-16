@@ -190,7 +190,7 @@ let config = {
             { field: 'unitsOnOrder', type: 'int', required: true, html: { label: 'Units On Order' } },
             { field: 'reorderLevel', type: 'int', required: true, html: { label: 'Reorder Level' } },
             {
-                field: 'discontinued', type: 'toggle', required: true, html: { label: 'Discontinued' }
+                field: 'discontinued', type: 'toggle', required: false, html: { label: 'Discontinued' }
             },
             {
                 field: 'categoryName', type: 'list',

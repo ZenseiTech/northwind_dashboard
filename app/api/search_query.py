@@ -54,7 +54,10 @@ def create_dinamic_filters(request_data, object):
     filters = []
 
     for search in request_data.search:
-        attr = getattr(object, camel_case_to_snake(search.field))
+        if search.field == "recid":
+            attr = getattr(object, camel_case_to_snake("id"))
+        else:
+            attr = getattr(object, camel_case_to_snake(search.field))
         type = operators_map[search.type]
         if type == "number":
             if search.operator == ">":
