@@ -617,6 +617,7 @@ class OrderDetailsView(db.Model):
             record["unitPrice"] = d.unit_price
             record["quantity"] = d.quantity
             record["discount"] = d.discount
+            record["total"] = (d.quantity * d.unit_price) - d.discount
 
             records.append(record)
 

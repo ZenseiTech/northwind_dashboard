@@ -94,11 +94,11 @@ let config = {
         toolbar: {
             items: [
                 { type: 'button', id: 'add', text: 'Add', icon: 'w2ui-icon-plus' },
-                { type: 'button', id: 'edit', text: 'Edit', icon: 'w2ui-icon-plus' },
+                { type: 'button', id: 'edit', text: 'Edit', icon: 'icon-pencil' },
                 { type: 'break' },
                 // { type: 'button', id: 'cancel', text: 'Cancel', icon: 'w2ui-icon-cross' },
                 { type: 'spacer' },
-                { type: 'button', id: 'excel', text: 'Excel', icon: 'w2ui-icon-plus' },
+                { type: 'button', id: 'excel', text: 'Excel', icon: 'icon-file-excel' },
             ],
             onClick: function (target, data) {
                 console.log("--- onClick target: " + target);

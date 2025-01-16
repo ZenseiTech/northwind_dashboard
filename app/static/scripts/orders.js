@@ -77,7 +77,7 @@ let config = {
                 { type: 'break' },
                 // { type: 'button', id: 'cancel', text: 'Cancel', icon: 'w2ui-icon-cross' },
                 { type: 'spacer' },
-                { type: 'button', id: 'excel', text: 'Excel', icon: 'w2ui-icon-plus' },
+                { type: 'button', id: 'excel', text: 'Excel', icon: 'icon-file-excel' },
             ],
             onClick: function (target, data) {
                 console.log("--- onClick Orders: " + target);
@@ -178,6 +178,7 @@ let config = {
             { field: 'unitPrice', text: 'Unit Price', size: '160px', searchable: true, sortable: true, render: 'money', editable: { type: 'money' } },
             { field: 'quantity', text: 'Quantity', size: '110px', searchable: true, sortable: true, render: 'int', editable: { type: 'int', min: 0, max: 32756 } },
             { field: 'discount', text: 'Discount', size: '120px', searchable: true, sortable: true, render: 'money', editable: { type: 'money' } },
+            { field: 'total', text: 'Total', size: '120px', searchable: true, sortable: true, render: 'money', editable: { type: 'money' } },
         ],
         onSave: function (event) {
             console.log("OrderDetails onSave... " + event.detail.changes);

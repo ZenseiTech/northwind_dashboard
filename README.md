@@ -69,3 +69,10 @@ If you don't want to run a hook at runtime in pre-commit
 
 Creation of blueprint ...
 https://realpython.com/flask-blueprint/
+
+
+From:
+
+https://icomoon.io/app/#/select
+
+Select icons and Generate Font
