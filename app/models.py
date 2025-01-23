@@ -11,7 +11,7 @@ from flask_login import AnonymousUserMixin, UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import logging as logger
-from app.utils.utils import IN_DATE_FORMAT, date_format, num_to_bool
+from app.utils.utils import IN_DATE_FORMAT, date_format, num_to_bool, toNotNone
 
 from . import db
 
@@ -463,6 +463,42 @@ class Customer(db.Model):
     phone = db.Column(db.String(64), nullable=True)
     fax = db.Column(db.String(64), nullable=True)
     orders = db.relationship("Order", backref="customers", lazy="dynamic")
+
+    @staticmethod
+    def record(d):
+        """Return a customer dictionary."""
+        record = {}
+        record["recid"] = d.id
+        record["customerId"] = d.customer_id
+        record["companyName"] = d.company_name
+        record["contactName"] = d.contact_name
+        record["contactTitle"] = d.contact_title
+        record["address"] = d.address
+        record["city"] = d.city
+        record["region"] = d.region
+        record["postalCode"] = d.postal_code
+        record["country"] = d.country
+        record["phone"] = d.phone
+        record["fax"] = toNotNone(d.fax)
+        return record
+
+    @staticmethod
+    def response(data, count):
+        """Create the customer response."""
+        response = {}
+        response["status"] = "success"
+        response["total"] = count
+
+        records = []
+
+        for d in data:
+            record = Customer.record(d)
+
+            records.append(record)
+
+        response["records"] = records
+
+        return json.dumps(response)
 
     def __repr__(self):
         """Representation."""

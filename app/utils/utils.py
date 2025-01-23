@@ -18,3 +18,10 @@ def camel_case_to_snake(key_value):
     """Change camelcase to snakecase."""
     pattern = re.compile(r"(?<!^)(?=[A-Z])")
     return pattern.sub("_", key_value).lower()
+
+
+def toNotNone(data):
+    """Change data from None to empty string."""
+    if data is None:
+        return ""
+    return data
