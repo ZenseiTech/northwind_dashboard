@@ -11,10 +11,12 @@ from flask_migrate import Migrate, upgrade
 from app import create_app, db
 from app.models import Category, Permission, Role, User
 
+# load the .env values ....
 dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
 if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
 
+# testing coverage ....
 COV = None
 if os.environ.get("FLASK_COVERAGE"):
     import coverage
@@ -22,7 +24,7 @@ if os.environ.get("FLASK_COVERAGE"):
     COV = coverage.coverage(branch=True, include="app/*")
     COV.start()
 
-
+# call the create_app function to set the app ...
 app = create_app(os.getenv("FLASK_CONFIG") or "default")
 migrate = Migrate(app, db)
 

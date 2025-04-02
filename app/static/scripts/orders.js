@@ -1,5 +1,5 @@
 
-import { w2grid, w2form, w2popup } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
+import { w2grid, w2form, w2popup, w2alert } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
 import { server_url } from './server.js'
 import { getRegions, getCities, getCountries } from './common.js'
 import { layout2, layoutOrder } from './layout.js'
@@ -240,6 +240,19 @@ let config = {
                 let errors = this.validate()
                 if (errors.length > 0) return
                 formOrder.save();
+            }
+        },
+        onSave: async function (event) {
+            await event.complete
+            const data = event.detail.data;
+            if (data.status === 'success') {
+                // Handle successful save
+                console.log('Form saved successfully:', data.message);
+                w2alert('Form saved successfully');
+            } else {
+                // Handle save error
+                console.error('Error saving form:', data.message);
+                w2alert('Error saving form: ' + data.message);
             }
         }
     },

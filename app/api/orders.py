@@ -128,6 +128,7 @@ def order():
 
     elif request_data["action"] == "save":
         print("Saving to DB")
-        record["success"] = True
+        record["status"] = "success"
+        record["message"] = "Form data saved successfully"
 
     return json.dumps(record)

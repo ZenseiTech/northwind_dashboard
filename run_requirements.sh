@@ -6,4 +6,4 @@ pip freeze | xargs pip uninstall -y
 
 pip install -r requirements.txt
 
-export FLASK_APP=northwind.py
+# export FLASK_APP=northwind.py
