@@ -32,9 +32,9 @@ def create_object(record):
     new_record = {}
     for (key, value) in record.items():
         if key == "supplierName":
-            new_record["supplier_id"] = get_supplier(record["supplierName"]["id"]).id
+            new_record["supplier_id"] = get_supplier(record["supplierName"]).id
         elif key == "categoryName":
-            new_record["category_id"] = get_category(record["categoryName"]["id"]).id
+            new_record["category_id"] = get_category(record["categoryName"]).id
         elif key == "supplierRegion":
             pass
         else:

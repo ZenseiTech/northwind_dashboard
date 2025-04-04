@@ -2,11 +2,11 @@
 
 # Run run_requirements.sh first if necessary ...
 
-VIRTUAL_ENV=""
+# VIRTUAL_ENV=""
 
-if [ "$VIRTUAL_ENV" = "" ]; then
-    source ./.venv/bin/activate
-fi
+# if [ "$VIRTUAL_ENV" = "" ]; then
+#     source ./.venv/bin/activate
+# fi
 
 
 export FLASK_APP=northwind.py

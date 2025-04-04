@@ -167,8 +167,10 @@ let config = {
         header: 'Order Details',
         limit: 500,
         show: {
-            // toolbar: true,
-            // toolbarSave: true,
+            toolbar: true,
+            toolbarAdd: true,
+            toolbarDelete: true,
+            toolbarEdit: true,
             header: true,
             footer: true,
         },
@@ -180,8 +182,15 @@ let config = {
             { field: 'discount', text: 'Discount', size: '120px', searchable: true, sortable: true, render: 'money', editable: { type: 'money' } },
             { field: 'total', text: 'Total', size: '120px', searchable: true, sortable: true, render: 'money', editable: { type: 'money' } },
         ],
-        onSave: function (event) {
-            console.log("OrderDetails onSave... " + event.detail.changes);
+        onEdit: function (event) {
+            console.log("OrderDetails onEdit... " + event);
+        },
+        onDelete: function (event) {
+            console.log("OrderDetails onDelete... " + event);
+            // event.preventDefault();
+        },
+        onAdd: function (event) {
+            console.log("OrderDetails onAdd... " + event);
         },
         onDblClick: function (event) {
             console.log("OrderDetails double click...: " + event.detail.recid);

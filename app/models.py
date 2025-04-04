@@ -127,6 +127,9 @@ class User(UserMixin, db.Model):
 
     def generate_token(self, expiration, type="confirm"):
         """Generate a token, with the pass expiration."""
+        print(f"====> Self.id: {self.id}")
+        secret_key = current_app.config["SECRET_KEY"]
+        print(f"==> Secret key: {secret_key}")
         reset_token = jwt.encode(
             {
                 type: self.id,
