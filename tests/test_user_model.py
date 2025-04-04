@@ -65,18 +65,14 @@ class UserModelTestCase(unittest.TestCase):
         self.assertFalse(u.confirm(token))
 
     def test_valid_reset_token(self):
-        print("==========> Now here 1 ....")
         u = User(password="cat", username="Jorge")
         db.session.add(u)
         db.session.commit()
-        u = User.query.filter_by(username="Jorge").first()
-        print(f"====> User id: {u.id}")
         token = u.generate_reset_token()
         self.assertTrue(User.reset_password(token, "dog"))
         self.assertTrue(u.verify_password("dog"))
 
     def test_invalid_reset_token(self):
-        print("==========> Now here 2 ....")
         u = User(password="cat")
         db.session.add(u)
         db.session.commit()
@@ -85,7 +81,6 @@ class UserModelTestCase(unittest.TestCase):
         self.assertTrue(u.verify_password("cat"))
 
     def test_valid_email_change_token(self):
-        print("==========> Now here 3 ....")
         u = User(email="john@example.com", password="cat")
         db.session.add(u)
         db.session.commit()
@@ -104,15 +99,11 @@ class UserModelTestCase(unittest.TestCase):
         self.assertTrue(u2.email == "susan@example.org")
 
     def test_duplicate_email_change_token(self):
-        print("==========> Now here ....")
         u1 = User(email="john@example.com", password="cat")
         u2 = User(email="susan@example.org", password="dog")
         db.session.add(u1)
         db.session.add(u2)
         db.session.commit()
-        u1 = User.query.filter_by(email="john@example.com").first()
-        u2 = User.query.filter_by(email="susan@example.org").first()
-        print(f"=========> User id2: {u2.id}")
         token = u2.generate_email_change_token("john@example.com")
         self.assertFalse(u2.change_email(token))
         self.assertTrue(u2.email == "susan@example.org")
