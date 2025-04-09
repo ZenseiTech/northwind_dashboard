@@ -6,6 +6,7 @@ import sys
 import click
 from dotenv import load_dotenv
 from flask import render_template
+from flask_login import login_required
 from flask_migrate import Migrate, upgrade
 
 from app import create_app, db
@@ -119,6 +120,7 @@ def deploy():
 
 
 @app.route("/")
+@login_required
 def index():
     """Home page."""
     return render_template("index.html")

@@ -13,7 +13,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from app import logging as logger
 from app.utils.utils import IN_DATE_FORMAT, date_format, num_to_bool, toNotNone
 
-from . import db
+from . import db, login_manager
 
 
 class Permission:
@@ -279,6 +279,15 @@ class AnonymousUser(AnonymousUserMixin):
     def is_administrator(self):
         """Check if user is administrator."""
         return False
+
+
+login_manager.anonymous_user = AnonymousUser
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    """Load user from database."""
+    return User.query.get(int(user_id))
 
 
 class Category(db.Model):

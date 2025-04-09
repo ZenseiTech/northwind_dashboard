@@ -2,6 +2,7 @@
 import json
 
 from flask import request
+from flask_login import login_required
 from sqlalchemy import or_
 
 from app.api import response
@@ -64,6 +65,7 @@ def products():
         "POST",
     ),
 )
+@login_required
 def product_details():
     """Product Details API."""
     print("===> Inside product details....")

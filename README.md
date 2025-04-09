@@ -76,3 +76,16 @@ From:
 https://icomoon.io/app/#/select
 
 Select icons and Generate Font
+
+
+Create user from command line
+
+    flask shell
+
+    >>> role = Role.query.filter_by(name='Administrator').first()
+
+    >>> u = User(email='barizonte@gmail.com', username='Zensei', role_id=role.id)
+
+    >>> db.session.add(u)
+
+    >>> db.session.commit()
