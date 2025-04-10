@@ -2,6 +2,7 @@
 import json
 
 from flask import request
+from flask_login import login_required
 from sqlalchemy import or_
 
 from app.api import response
@@ -13,6 +14,7 @@ from . import api
 
 
 @api.route("/shipregions", methods=("GET", "POST"))
+@login_required
 def ship_regions():
     """Retreive regions from api."""
     data = ShipRegions.query.all()
@@ -23,6 +25,7 @@ def ship_regions():
 
 
 @api.route("/shipcountries", methods=("GET", "POST"))
+@login_required
 def ship_countries():
     """Retreive countries from api."""
     data = ShipCountries.query.all()
@@ -33,6 +36,7 @@ def ship_countries():
 
 
 @api.route("/shipcities", methods=("GET", "POST"))
+@login_required
 def ship_cities():
     """Retreive cities from api."""
     data = ShipCities.query.all()
@@ -49,6 +53,7 @@ def ship_cities():
         "POST",
     ),
 )
+@login_required
 def orders():
     """Order API."""
     print("===> Inside orders ...")
@@ -90,6 +95,7 @@ def orders():
         "POST",
     ),
 )
+@login_required
 def order_details(order_id):
     """Order Details API."""
     print("===> Inside order details....")
@@ -110,6 +116,7 @@ def order_details(order_id):
         "POST",
     ),
 )
+@login_required
 def order():
     """Order API."""
     print("===> Inside order....")

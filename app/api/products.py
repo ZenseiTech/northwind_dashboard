@@ -50,6 +50,7 @@ def create_object(record):
 
 
 @api.route("/products", methods=("GET", "POST"))
+@login_required
 def products():
     """Product API."""
     products = ProductView.query.all()
@@ -133,6 +134,7 @@ def __update(request_data):
         "POST",
     ),
 )
+@login_required
 def product():
     """Product API."""
     print("===> Inside product....")
