@@ -693,7 +693,7 @@ class ShipCities(db.Model):
 
     __tablename__ = "cities"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    city_name = db.Column(db.String(64), nullable=True)
+    city_name = db.Column(db.String(64), unique=True, index=True)
 
 
 class ShipCountries(db.Model):

@@ -1,5 +1,6 @@
 """Customer module."""
 from flask import request
+from flask_login import login_required
 from sqlalchemy import or_
 
 from app.api import response
@@ -17,6 +18,7 @@ from . import api
         "POST",
     ),
 )
+@login_required
 def customers():
     """Call API for customer."""
     print("===> Inside customer....")
