@@ -19,8 +19,10 @@ from . import db, login_manager
 class Permission:
     """Contain the constant permissions."""
 
-    VIEW = 1
-    WRITE = 2
+    ADD = 1
+    EDIT = 2
+    DELETE = 4
+    VIEW = 8
     ADMIN = 16
 
 
@@ -44,9 +46,20 @@ class Role(db.Model):
     def insert_roles():
         """Insert initial roles."""
         roles = {
-            "User": [Permission.WRITE],
-            "Viewer": [Permission.VIEW, Permission.WRITE],
-            "Administrator": [Permission.VIEW, Permission.WRITE, Permission.ADMIN],
+            "User": [Permission.VIEW],
+            "EDITOR": [
+                Permission.ADD,
+                Permission.EDIT,
+                Permission.DELETE,
+                Permission.VIEW,
+            ],
+            "Administrator": [
+                Permission.ADD,
+                Permission.EDIT,
+                Permission.DELETE,
+                Permission.VIEW,
+                Permission.ADMIN,
+            ],
         }
         default_role = "User"
         for r in roles:

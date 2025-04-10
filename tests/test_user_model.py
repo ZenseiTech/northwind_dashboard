@@ -110,27 +110,28 @@ class UserModelTestCase(unittest.TestCase):
 
     def test_user_role(self):
         u = User(email="john@example.com", password="cat")
-        self.assertTrue(u.can(Permission.WRITE))
-        self.assertFalse(u.can(Permission.VIEW))
+        self.assertTrue(u.can(Permission.VIEW))
+        self.assertFalse(u.can(Permission.EDIT))
         self.assertFalse(u.can(Permission.ADMIN))
 
     def test_moderator_role(self):
-        r = Role.query.filter_by(name="Moderator").first()
+        r = Role.query.filter_by(name="EDITOR").first()
         u = User(email="john@example.com", password="cat", role=r)
-        self.assertTrue(u.can(Permission.WRITE))
-        self.assertFalse(u.can(Permission.VIEW))
+        self.assertTrue(u.can(Permission.EDIT))
+        self.assertTrue(u.can(Permission.VIEW))
         self.assertFalse(u.can(Permission.ADMIN))
 
     def test_administrator_role(self):
         r = Role.query.filter_by(name="Administrator").first()
         u = User(email="john@example.com", password="cat", role=r)
-        self.assertTrue(u.can(Permission.WRITE))
+        self.assertTrue(u.can(Permission.EDIT))
         self.assertTrue(u.can(Permission.VIEW))
+        self.assertTrue(u.can(Permission.ADD))
         self.assertTrue(u.can(Permission.ADMIN))
 
     def test_anonymous_user(self):
         u = AnonymousUser()
-        self.assertFalse(u.can(Permission.WRITE))
+        self.assertFalse(u.can(Permission.EDIT))
         self.assertFalse(u.can(Permission.VIEW))
         self.assertFalse(u.can(Permission.ADMIN))
 

@@ -8,8 +8,9 @@ from sqlalchemy import or_
 from app.api import response
 from app.api.search_query import create_dinamic_filters, create_dinamic_sort
 from app.api.search_request import build_request
+from app.decorators import permission_required
 
-from ..models import Category, Product, ProductView, Supplier, db
+from ..models import Category, Permission, Product, ProductView, Supplier, db
 from ..utils.utils import camel_case_to_snake
 from . import api
 
@@ -135,6 +136,7 @@ def __update(request_data):
     ),
 )
 @login_required
+@permission_required(Permission.EDIT)
 def product():
     """Product API."""
     print("===> Inside product....")
