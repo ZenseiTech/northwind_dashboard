@@ -47,7 +47,7 @@ class Role(db.Model):
         """Insert initial roles."""
         roles = {
             "User": [Permission.VIEW],
-            "EDITOR": [
+            "Editor": [
                 Permission.ADD,
                 Permission.EDIT,
                 Permission.DELETE,

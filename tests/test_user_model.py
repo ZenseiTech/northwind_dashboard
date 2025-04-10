@@ -115,7 +115,7 @@ class UserModelTestCase(unittest.TestCase):
         self.assertFalse(u.can(Permission.ADMIN))
 
     def test_moderator_role(self):
-        r = Role.query.filter_by(name="EDITOR").first()
+        r = Role.query.filter_by(name="Editor").first()
         u = User(email="john@example.com", password="cat", role=r)
         self.assertTrue(u.can(Permission.EDIT))
         self.assertTrue(u.can(Permission.VIEW))

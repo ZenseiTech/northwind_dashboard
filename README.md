@@ -78,7 +78,9 @@ https://icomoon.io/app/#/select
 Select icons and Generate Font
 
 
-Create user from command line
+Create user from command line. Alway export first:
+
+    export FLASK_APP=northwind.py
 
     flask shell
 
