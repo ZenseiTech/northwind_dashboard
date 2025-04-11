@@ -4,7 +4,11 @@
 
 <h1>{% block title %}NorthWind UI{% endblock %}</h1>
 
-<h4>Hello user, {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Stranger{% endif %}!</h4>
+<h5>User: {% if current_user.is_authenticated %}
+    {{ current_user.username }}<br>
+    Role: {{ current_user.role.name }}
+    {% else %}Guest{% endif %}
+</h5>
 {% if current_user.is_authenticated %}
 <ul>
     <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>

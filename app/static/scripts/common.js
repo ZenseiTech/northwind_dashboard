@@ -6,6 +6,37 @@ let suppliers = []
 let cities = []
 let countries = []
 
+export async function hasPermission(server_endpoint) {
+    let result = ""
+    await fetch(server_endpoint, {
+        method: 'GET', // or 'POST', 'PUT', etc.
+    })
+        .then(response => {
+            if (response.status === 403) {
+                // throw new Error('Access forbidden - you do not have permission to access this resource');
+                result = response
+            }
+            if (!response.ok) {
+                // throw new Error(`HTTP error! status: ${response.status}`);
+                result = response.status
+            }
+            // return response.json();
+        })
+        .catch(error => {
+            console.error('Error:', error.message);
+            if (error.message.includes('forbidden')) {
+                // Handle forbidden access specifically
+                // alert('You need proper permissions to access this content');
+                // response = error.message
+                result = 403
+            } else {
+                // Handle other errors
+                console.log("Other error: " + error.message)
+            }
+        });
+    return result
+}
+
 export async function getCities() {
     console.log("Calling cities ....")
     await fetch(server_url + '/shipcities')

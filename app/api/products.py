@@ -1,18 +1,19 @@
 """Product module."""
 import json
 
-from flask import request
-from flask_login import login_required
+from flask import abort, request
+from flask_login import current_user, login_required
 from sqlalchemy import or_
 
 from app.api import response
 from app.api.search_query import create_dinamic_filters, create_dinamic_sort
 from app.api.search_request import build_request
-from app.decorators import permission_required
 
 from ..models import Category, Permission, Product, ProductView, Supplier, db
 from ..utils.utils import camel_case_to_snake
 from . import api
+
+# from app.decorators import permission_required
 
 
 def get_category(category_name):
@@ -136,12 +137,28 @@ def __update(request_data):
     ),
 )
 @login_required
-@permission_required(Permission.EDIT)
+# @permission_required(Permission.EDIT)
 def product():
     """Product API."""
     print("===> Inside product....")
 
     request_data = json.loads(request.values["request"])
+
+    # checking permission for adding product ...
+    if (
+        "isAdd" in request_data
+        and request_data["isAdd"]
+        and not current_user.can(Permission.ADD)
+    ):
+        abort(403)
+
+    # checking permission for editing product ...
+    if (
+        "isEdit" in request_data
+        and request_data["isEdit"]
+        and not current_user.can(Permission.EDIT)
+    ):
+        abort(403)
 
     record = {}
 
@@ -154,11 +171,17 @@ def product():
     elif request_data["action"] == "save":
         isAdd = request_data["record"]["recid"] is None
         if isAdd:
-            print("Add...")
-            __save(request_data)
+            if current_user.can(Permission.ADD):
+                print("Add...")
+                __save(request_data)
+            else:
+                abort(403)
         else:
-            print("Product update...")
-            __update(request_data)
+            if current_user.can(Permission.ADD):
+                print("Product update...")
+                __update(request_data)
+            else:
+                abort(403)
 
         record["success"] = True
 

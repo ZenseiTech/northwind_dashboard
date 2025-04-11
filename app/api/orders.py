@@ -8,13 +8,22 @@ from sqlalchemy import or_
 from app.api import response
 from app.api.search_query import create_dinamic_filters, create_dinamic_sort
 from app.api.search_request import build_request
+from app.decorators import permission_required
 
-from ..models import OrderDetailsView, OrderView, ShipCities, ShipCountries, ShipRegions
+from ..models import (
+    OrderDetailsView,
+    OrderView,
+    Permission,
+    ShipCities,
+    ShipCountries,
+    ShipRegions,
+)
 from . import api
 
 
 @api.route("/shipregions", methods=("GET", "POST"))
 @login_required
+@permission_required(Permission.VIEW)
 def ship_regions():
     """Retreive regions from api."""
     data = ShipRegions.query.all()
@@ -26,6 +35,7 @@ def ship_regions():
 
 @api.route("/shipcountries", methods=("GET", "POST"))
 @login_required
+@permission_required(Permission.VIEW)
 def ship_countries():
     """Retreive countries from api."""
     data = ShipCountries.query.all()
@@ -37,6 +47,7 @@ def ship_countries():
 
 @api.route("/shipcities", methods=("GET", "POST"))
 @login_required
+@permission_required(Permission.VIEW)
 def ship_cities():
     """Retreive cities from api."""
     data = ShipCities.query.all()
@@ -54,6 +65,7 @@ def ship_cities():
     ),
 )
 @login_required
+@permission_required(Permission.VIEW)
 def orders():
     """Order API."""
     print("===> Inside orders ...")
@@ -96,6 +108,7 @@ def orders():
     ),
 )
 @login_required
+@permission_required(Permission.VIEW)
 def order_details(order_id):
     """Order Details API."""
     print("===> Inside order details....")
@@ -117,6 +130,7 @@ def order_details(order_id):
     ),
 )
 @login_required
+@permission_required(Permission.EDIT)
 def order():
     """Order API."""
     print("===> Inside order....")

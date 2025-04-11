@@ -84,10 +84,24 @@ Create user from command line. Alway export first:
 
     flask shell
 
-    >>> role = Role.query.filter_by(name='Administrator').first()
+    Create user with Administrator role:
 
-    >>> u = User(email='barizonte@gmail.com', username='Zensei', role_id=role.id)
+        >>> role = Role.query.filter_by(name='Administrator').first()
 
-    >>> db.session.add(u)
+        >>> u = User(email='jorge@gmail.com', username='Zensei', role_id=role.id)
 
-    >>> db.session.commit()
+        >>> db.session.add(u)
+
+        >>> db.session.commit()
+
+    Create user with View role
+
+        >>> role = Role.query.filter_by(name='User').first()
+
+        >>> u = User(email='luis@gmail.com', username='Luis', role_id=role.id)
+
+        >>> u.password = 'secret'
+
+        >>> db.session.add(u)
+
+        >>> db.session.commit()
