@@ -15,7 +15,9 @@ echo $FLASK_APP
 
 export FLASK_DEBUG=1
 
-flask run --debug
+gunicorn -w 4 -k gthread --bind 0.0.0.0:5000  northwind:app
+
+# flask run --debug
 
 # Commands:
 #     run     Runs as development server.

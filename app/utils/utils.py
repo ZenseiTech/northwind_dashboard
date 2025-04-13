@@ -4,7 +4,9 @@ import re
 IN_DATE_FORMAT = "%m/%d/%Y"
 OUT_DATE_FORMAT = "%Y-%m-%d"
 
-num_to_bool = {"1": True, "0": False}
+# num_to_bool = {"1": True, "0": False}
+
+num_to_bool = {"1": "Y", "0": "N"}
 
 
 def date_format(date_in, format):
