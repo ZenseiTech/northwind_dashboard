@@ -1,13 +1,15 @@
 """Customer module."""
-from flask import request
-from flask_login import login_required
+import json
+
+from flask import abort, request
+from flask_login import current_user, login_required
 from sqlalchemy import or_
 
 from app.api import response
 from app.api.search_query import create_dinamic_filters, create_dinamic_sort
 from app.api.search_request import build_request
 
-from ..models import Customer
+from ..models import Customer, Permission
 from . import api
 
 
@@ -51,3 +53,62 @@ def customers():
     customers = query.all()
 
     return response.grid_response("Customer", customers, count)
+
+
+@api.route(
+    "/customer",
+    methods=(
+        "GET",
+        "POST",
+    ),
+)
+@login_required
+# @permission_required(Permission.EDIT)
+def customer():
+    """Add or Edit Customer API."""
+    print("===> Inside customer....")
+
+    request_data = json.loads(request.values["request"])
+
+    # checking permission for adding customer ...
+    if (
+        "isAdd" in request_data
+        and request_data["isAdd"]
+        and not current_user.can(Permission.ADD)
+    ):
+        abort(403)
+
+    # checking permission for editing customer ...
+    if (
+        "isEdit" in request_data
+        and request_data["isEdit"]
+        and not current_user.can(Permission.EDIT)
+    ):
+        abort(403)
+
+    record = {}
+
+    if request_data["action"] == "get":
+        query = Customer.query
+        query = query.filter(Customer.id == request_data["recid"])
+        d = query.one()
+        record = Customer.customer_record(d)
+
+    elif request_data["action"] == "save":
+        isAdd = request_data["record"]["recid"] is None
+        if isAdd:
+            if current_user.can(Permission.ADD):
+                print("Add...")
+                # __save(request_data)
+            else:
+                abort(403)
+        else:
+            if current_user.can(Permission.EDIT):
+                print("Customer update...")
+                # __update(request_data)
+            else:
+                abort(403)
+
+        record["success"] = True
+
+    return json.dumps(record)

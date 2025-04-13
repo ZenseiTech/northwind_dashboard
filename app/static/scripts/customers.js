@@ -1,5 +1,10 @@
 import { server_url } from './server.js'
+import { hasPermission, removeElement } from './common.js'
 import { w2grid } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
+
+const editUrl = server_url + "/customer"
+const canEdit = await hasPermission(editUrl + '?request={"action":"get", "recid": 1, "isEdit": true}')
+const canAdd = await hasPermission(editUrl + '?request={"action":"get", "recid": 1, "isAdd": true}')
 
 let config = {
     customers: {
@@ -74,6 +79,10 @@ let config = {
         },
         onKeydown: function (event) {
 
+        },
+        onLoad: function (event) {
+            removeElement('tb_customers_toolbar_item_add', canAdd === 403)
+            removeElement('tb_customers_toolbar_item_edit', canEdit === 403)
         }
     },
 }

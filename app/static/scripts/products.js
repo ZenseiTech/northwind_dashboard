@@ -1,26 +1,16 @@
 import { w2grid, w2form, w2popup, w2field, query } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
 import { server_url } from './server.js'
 import { layout2, layoutProduct } from './layout.js'
-import { getRegions, getCategories, getSuppliers, hasPermission } from './common.js'
+import { getRegions, getCategories, getSuppliers, hasPermission, removeElement } from './common.js'
 
 new w2field('money', { el: query('#us-money')[0] })
 
-let suppliers = await getSuppliers()
-let regions = await getRegions()
-let categories = await getCategories()
+const suppliers = await getSuppliers()
+const regions = await getRegions()
+const categories = await getCategories()
 const editUrl = server_url + "/product"
-let canEdit = await hasPermission(editUrl + '?request={"action":"get", "recid": 1, "isEdit": true}')
-let canAdd = await hasPermission(editUrl + '?request={"action":"get", "recid": 1, "isAdd": true}')
-
-function disableElement(elementId, canDo) {
-    if (canDo === 403) {
-        const element = document.getElementById(elementId);
-        const classes = 'w2ui-tb-button w2ui-eaction disabled';
-        classes.split(' ').forEach(className => {
-            element.classList.add(className);
-        });
-    }
-}
+const canEdit = await hasPermission(editUrl + '?request={"action":"get", "recid": 1, "isEdit": true}')
+const canAdd = await hasPermission(editUrl + '?request={"action":"get", "recid": 1, "isAdd": true}')
 
 function openPopup(isEdit) {
 
@@ -191,8 +181,9 @@ let config = {
         },
         onLoad: function (event) {
             console.log("Loading products ...");
-            disableElement('tb_product_details_toolbar_item_add', canAdd)
-            disableElement('tb_product_details_toolbar_item_edit', canEdit)
+
+            removeElement('tb_product_details_toolbar_item_add', canAdd === 403)
+            removeElement('tb_product_details_toolbar_item_edit', canEdit === 403)
 
             product_details.searches[5].options.items = categories
 

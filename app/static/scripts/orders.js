@@ -4,9 +4,9 @@ import { server_url } from './server.js'
 import { getRegions, getCities, getCountries } from './common.js'
 import { layout2, layoutOrder } from './layout.js'
 
-let countries = await getCountries()
-let cities = await getCities()
-let regions = await getRegions()
+const countries = await getCountries()
+const cities = await getCities()
+const regions = await getRegions()
 
 
 function getOrderRecord(recid) {

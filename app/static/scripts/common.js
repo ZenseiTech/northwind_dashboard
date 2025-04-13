@@ -6,6 +6,27 @@ let suppliers = []
 let cities = []
 let countries = []
 
+export function disableElement(elementId, isNotAllowed) {
+    if (isNotAllowed) {
+        const element = document.getElementById(elementId);
+        if (element !== null) {
+            const classes = 'w2ui-tb-button w2ui-eaction disabled';
+            classes.split(' ').forEach(className => {
+                element.classList.add(className);
+            });
+        }
+    }
+}
+
+export function removeElement(elementId, isNotAllowed) {
+    if (isNotAllowed) {
+        const element = document.getElementById(elementId);
+        if (element !== null) {
+            element.remove();
+        }
+    }
+}
+
 export async function hasPermission(server_endpoint) {
     let result = ""
     await fetch(server_endpoint, {

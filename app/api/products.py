@@ -177,7 +177,7 @@ def product():
             else:
                 abort(403)
         else:
-            if current_user.can(Permission.ADD):
+            if current_user.can(Permission.EDIT):
                 print("Product update...")
                 __update(request_data)
             else:
