@@ -34,7 +34,6 @@ Read: https://pypi.org/project/pip-tools/
     pre-commit gc: clears unused things
     pre-commit clean: nukes the whole thing
 
-
 Set PYTHONPATH to see your modules
 
     export PYTHONPATH="/media/zensei/My Passport/Zensei/Projects/Python/northwind-dashboard/app:$PYTHONPATH"
@@ -49,12 +48,9 @@ To test:
 
     flask test --coverage
 
-
-
 To clean pip
 
     pip freeze | xargs pip uninstall -y
-
 
 http://localhost:5000/api/v1/categories
 
@@ -66,10 +62,8 @@ If you don't want to run a hook at runtime in pre-commit
 
     SKIP=unittests,flake8 git commit -m <...>
 
-
 Creation of blueprint ...
 https://realpython.com/flask-blueprint/
-
 
 From:
 
@@ -77,18 +71,21 @@ https://icomoon.io/app/#/select
 
 Select icons and Generate Font
 
-
 Create user from command line. Alway export first:
 
     export FLASK_APP=northwind.py
 
     flask shell
 
-    Create user with Administrator role:
+    Create user with Administrator role (if the user exist remove first):
 
         >>> role = Role.query.filter_by(name='Administrator').first()
 
-        >>> u = User(email='jorge@gmail.com', username='Zensei', role_id=role.id)
+        >>> u = User(email='barizonte@gmail.com', username='Zensei', role_id=role.id)
+
+        >>> u.password = 'your_secret_password'
+
+        >>> u.role_id = role.id
 
         >>> db.session.add(u)
 
@@ -105,8 +102,6 @@ Create user from command line. Alway export first:
         >>> db.session.add(u)
 
         >>> db.session.commit()
-
-
 
 Load balancer app:
 

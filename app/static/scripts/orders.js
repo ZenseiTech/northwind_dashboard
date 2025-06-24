@@ -37,6 +37,7 @@ async function getOrderDetails(orderId) {
 
 
 function openPopup() {
+    // load data from api ...
     formOrder.recid = orders.getSelection()[0];
     formOrder.url = server_url + "/order"
 
@@ -254,7 +255,7 @@ let config = {
         onSave: async function (event) {
             await event.complete
             const data = event.detail.data;
-            if (data.status === 'success') {
+            if (data.success) {
                 // Handle successful save
                 console.log('Form saved successfully:', data.message);
                 w2alert('Form saved successfully');

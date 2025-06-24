@@ -34,7 +34,8 @@ def create_app(config_name):
 
     # print(f"===> Logger level: {app.config['LOGGER_LEVEL']}")
 
-    app.config["SQLALCHEMY_ECHO"] = True  # Enable SQL logging
+    # Enable SQL logging
+    app.config["SQLALCHEMY_ECHO"] = True
     config[config_name].init_app(app)
 
     bootstrap.init_app(app)
@@ -44,10 +45,12 @@ def create_app(config_name):
     login_manager.init_app(app)
     pagedown.init_app(app)
 
+    logging.info("========> App setup")
+
     # setting logging ...
-    app.logger.setLevel(app.config["LOGGER_LEVEL"])
-    handler = logging.FileHandler("logs/northwind.log")
-    app.logger.addHandler(handler)
+    # app.logger.setLevel(app.config["LOGGER_LEVEL"])
+    # handler = logging.FileHandler("logs/northwind.log")
+    # app.logger.addHandler(handler)
 
     # if app.config["SSL_REDIRECT"]:
     #     from flask_sslify import SSLify

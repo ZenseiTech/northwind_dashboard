@@ -30,8 +30,8 @@ def get_supplier(supplier_name):
     return query.one()
 
 
-def create_object(record):
-    """From a dictionary create the Product object."""
+def __create_object(record):
+    """From a record create the Product object."""
     new_record = {}
     for (key, value) in record.items():
         if key == "supplierName":
@@ -104,14 +104,14 @@ def product_details():
 
 
 def __save(request_data):
-    in_record = create_object(request_data["record"])
+    in_record = __create_object(request_data["record"])
     product = Product(**in_record)
     db.session.add(product)
     db.session.commit()
 
 
 def __update(request_data):
-    in_record = create_object(request_data["record"])
+    in_record = __create_object(request_data["record"])
     product = Product(**in_record)
     product_update = Product.query.get(product.id)
 
@@ -121,7 +121,7 @@ def __update(request_data):
     product_update.units_in_stock = product.units_in_stock
     product_update.units_on_order = product.units_on_order
     product_update.reorder_level = product.reorder_level
-    product_update.discontinued = product.discontinued
+    product_update.discontinued = 1 if product.discontinued == "N" else 0
     product_update.supplier_id = product.supplier_id
     product_update.category_id = product.category_id
 
